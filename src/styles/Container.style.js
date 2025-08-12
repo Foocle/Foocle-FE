@@ -8,6 +8,7 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 2rem;
+  padding: 1.875rem;
   border: 1px solid black;
+  box-sizing: border-box;
 `;

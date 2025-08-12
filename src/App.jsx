@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { Start } from './pages/Start';
 import InputShopInfo from './pages/Curation/InputShopInfo';
 import MainLayout from './layout/MainLayout';
+import Test from './pages/Curation/Test';
 function App() {
   return (
     <Routes>
@@ -10,6 +11,7 @@ function App() {
       {/* MainLayout 상속받는 그룹*/}
       <Route element={<MainLayout />}>
         <Route path="shopinfo" element={<InputShopInfo />} />
+        <Route path="test" element={<Test />} />
       </Route>
     </Routes>
   );
