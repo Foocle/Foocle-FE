@@ -10,57 +10,64 @@ import XIcon from '../../public/img/icon_x.svg';
 
 const HeaderWrapper = styled.header`
   max-width: 600px;
-  height: 3.5rem; /* 56px */
+  height: 5.625rem;
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 2rem; /* 16px */
-`;
-
-const Button = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #000;
-  min-width: 2.75rem; /* 44px */
-  min-height: 2.75rem; /* 44px */
-  display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 0;
+  padding: 1.875rem;
+  box-sizing: border-box;
+  position: relative;
+`;
+const SideContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 
-  &:active {
-    opacity: 0.6;
+  // 왼쪽, 오른쪽 위치 지정
+  &.left {
+    left: 1.875rem;
+  }
+  &.right {
+    right: 1.875rem;
   }
 `;
+const Button = styled.button`
+  width: 1.875rem;
+  height: 1.875rem;
+  border: none;
+  background-color: white;
+  cursor: pointer;
+  padding: 0;
+`;
 
-const CompleteButton = styled(Button)`
+const CompleteButton = styled.button`
+  display: inline-block;
+  background-color: #fff;
+  border: none;
   color: var(--Maincolor-1, #ff7300);
-  font-family: "Pretendard-Medium"; /* 글씨체 수정 */
-  font-size: 1rem; /* 24px */
-  font-weight: 500;
-  line-height: 2rem; /* 40px */
-  font-style: normal;
   text-align: center;
+  font-family: Pretendard;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 2.5rem;
+  padding: 0;
 `;
 
 const Title = styled.div`
-  flex: 1;
-  text-align: center;
   font-weight: 600;
-  font-size: 1.125rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0 0.75rem;
+  font-size: 1.5rem;
+  color: var(--Gray-scale-2, #4d4d4d);
+  font-family: Pretendard;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.875rem;
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem; // 8px
+const Img = styled.img`
+  width: 100%;
+  height: 100%;
 `;
 
 export default function Header() {
@@ -69,24 +76,24 @@ export default function Header() {
 
   return (
     <HeaderWrapper>
-      <ButtonContainer>
+      <SideContainer className="left">
         {showBackButton && (
           <Button onClick={() => navigate(-1)}>
-            <img src={IconDone} alt="뒤로 가기" />
+            <Img src={IconDone} alt="뒤로 가기" />
           </Button>
         )}
         {showCloseButton && (
           <Button onClick={() => navigate('/')}>
-            <img src={XIcon} alt="닫기" />
+            <Img src={XIcon} alt="닫기" />
           </Button>
         )}
-      </ButtonContainer>
+      </SideContainer>
 
       <Title>{title}</Title>
 
-      <ButtonContainer>
+      <SideContainer className="right">
         {showCompleteButton && <CompleteButton onClick={onComplete}>완료</CompleteButton>}
-      </ButtonContainer>
+      </SideContainer>
     </HeaderWrapper>
   );
 }

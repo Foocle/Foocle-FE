@@ -14,7 +14,7 @@ const FooterBtn = styled.button`
     cursor: pointer;
 `;
 
-const Button = ({ text, onClick, reverse, height, fontSize }) => {
+export const Button = ({ text, onClick, reverse, height, fontSize }) => {
     return (
         <FooterBtn
             onClick={onClick}
@@ -26,5 +26,3 @@ const Button = ({ text, onClick, reverse, height, fontSize }) => {
         </FooterBtn>
     );
 };
-
-export default Button;

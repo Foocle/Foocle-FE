@@ -1,6 +1,6 @@
 // 시작 페이지
 import styled from "styled-components";
-import Container from "../styles/Container.style.js";
+import { Container } from "../styles/Container.style.js";
 import LogoText from "../../public/logo_text.svg";
 import KakaoLogo from "../../public/img/kakao_logo.svg";
 
@@ -43,7 +43,7 @@ const BtnWrapper = styled.div`
         color:#4D4D4D;
         padding-top: 0.625rem;
         cursor: pointer;
-        text-decoration: none;
+        text-decoration: none; /* 밑줄 제거 */
     }
 `;
 const BaseBtn = styled.div`
@@ -77,40 +77,32 @@ const KakaoBtn = styled(BaseBtn)`/* BaseBtn 스타일을 상속받아 사용 */
         background-color: #fdef73;
     }
 `;
-const LoginBtn = styled(BaseBtn)`
+const LoginBtn = styled(BaseBtn)`/* BaseBtn 스타일을 상속받아 사용 */
     background-color: #F0F0F0;
 
     p {
         color: #222222;
     }
 `;
-const SignupBtn = styled(BaseBtn)`
+const SignupBtn = styled(BaseBtn)`/* BaseBtn 스타일을 상속받아 사용 */
     background-color: #4D4D4D;
 
     p {
         color: #FFFFFF;
     }
 `;
-const Footer = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    width: 100%;
-    max-width: 27.875rem;
-    margin-top: 1.875rem;
-`;
 const Disclaimer = styled.p`
     width: 100%;
+    max-width: 27.875rem;
     text-align: center;
     line-height: 1.75rem;
+    margin-top: 1.875rem;
     font-size: 1.125rem;
     font-family: "Pretendard-SemiBold";
-    color: #D0D0D0;
+    color:#D0D0D0;
 `;
 
-export default function Start() {
+export const Start = () => {
     return (
         <Container>
             <TitleWrapper>
@@ -133,11 +125,9 @@ export default function Start() {
                 </SignupBtn>
                 <a>비회원으로 시작하기</a>
             </BtnWrapper>
-            <Footer>
-                <Disclaimer>
-                    가입을 진행할 경우, 이용약관과 개인정보 수집 및 이용에 대해 동의한 것으로 간주됩니다.
-                </Disclaimer>
-            </Footer>
+            <Disclaimer>
+                가입을 진행할 경우, 이용약관과 개인정보 수집 및 이용에 대해 동의한 것으로 간주됩니다.
+            </Disclaimer>
         </Container>
     );
 };

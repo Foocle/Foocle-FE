@@ -4,7 +4,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from '../components/Header';
-import Container from '../styles/Container.style';
+import { Container } from '../styles/Container.style';
 
 const LayoutWrapper = styled.div`
   display: flex;
