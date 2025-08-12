@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import OnboardingData from "./OnboardingData";
 import { Button } from "../../components/Button"; 
-import { Container } from "../../styles/Container.style";
 
 const Onboarding = () => {
     const navigate = useNavigate();
@@ -17,7 +16,7 @@ const Onboarding = () => {
 
     const handleNext = useCallback(() => {
         if (index === last) {
-            navigate("/")
+            navigate("/loginstart")
         } else {
             goNext();
         }
@@ -38,11 +37,11 @@ const Onboarding = () => {
                 <Image alt={data.title} src={data.image}></Image>
             </Body>
             <Card>
-                <Dots>
+                <DotsWrapper>
                     {OnboardingData.map((_, i) => (
                         <Dots key={i} $active={i === index} />
                     ))}
-                </Dots>
+                </DotsWrapper>
                 <CardTitleSection>
                     <CardTitle>{data.title}</CardTitle>
                     <CardDesc>{data.description}</CardDesc>
@@ -62,6 +61,8 @@ const OnboardingWrapper = styled.div`
     flex-direction: column;
     justify-content: space-between;
     border: 1px solid black;
+    position: relative;
+    overflow: hidden;
 `
 const SkipHeader = styled.header`
     display: flex;
@@ -95,6 +96,7 @@ const Body = styled.div`
 const Image = styled.img`
     width: 100%;
 `;
+const R = 40;
 const Card = styled.main`
     display: flex;
     flex-direction: column;
@@ -103,18 +105,39 @@ const Card = styled.main`
     position: relative;
     padding: 24px 2rem 2rem 2rem;
     border-radius: 40px 40px 0 0;
-    border: 1px solid red;
+    overflow: visible;
+
+    &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: ${R * 2}px;
+    border-radius: ${R}px ${R}px 0 0;
+    box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.1);
+    clip-path: inset(-20px -20px 50% -20px round ${R+4}px ${R+4}px 0 0);
+    pointer-events: none;
+    }
+  
+`;
+const DotsWrapper = styled.div`
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
 `;
 const Dots = styled.span`
     width: 70px;
     height: 4px;
+    display: inline-block;
     border-radius: 5px;
-    background: ${({ $active }) => ($active ? "#FF7300" : "#FF9B4A")};
-    transition: background 0.2s ease;
+    background: ${({ $active }) => ($active ? "#FF7300" : "#FFBF8A8C")};
+    transition: background 0.05s ease;
 `;
 const CardTitleSection = styled.div`
     width: 100%;
-    height: 175px;
+    height: 172px;
     padding: 30px 0;
     display: flex;
     flex-direction: column;
@@ -135,6 +158,7 @@ const CardDesc = styled.p`
     font-family: "Pretendard-Medium";
     line-height: 40px;
     color: #4D4D4D;
+    white-space: pre-line; /* \n을 줄바꿈으로 렌더링 */
 `;
 
 export default Onboarding;
