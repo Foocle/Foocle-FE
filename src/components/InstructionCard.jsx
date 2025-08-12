@@ -21,14 +21,14 @@ const InfoBar = styled.div`
   border-radius: 8px;
   padding: 0.8rem;
   color: #555;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   box-sizing: border-box;
   color: var(--Gray-scale-5, #868686);
   font-family: Pretendard;
   font-size: 1.125rem;
   font-style: normal;
   font-weight: 600;
-  line-height: 1.75rem; /* 155.556% */
+  line-height: 1.75rem;
 `;
 
 const Gap = styled.div`
