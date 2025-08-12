@@ -2,8 +2,8 @@ import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import OnboardingData from "./OnboardingData";
-import Button from "../../components/Button"; 
-import Container from "../../styles/Container.style";
+import { Button } from "../../components/Button"; 
+import { Container } from "../../styles/Container.style";
 
 const Onboarding = () => {
     const navigate = useNavigate();
@@ -43,13 +43,11 @@ const Onboarding = () => {
                         <Dots key={i} $active={i === index} />
                     ))}
                 </Dots>
-                <Card_Body>
-                    <Card_Body_Title>{data.title}</Card_Body_Title>
-                    <Card_Body_Desc>{data.description}</Card_Body_Desc>
-                </Card_Body>
-                <Button onClick={handleNext} reverse={"true"}>
-                    {data.ctaLabel}
-                </Button>
+                <CardTitleSection>
+                    <CardTitle>{data.title}</CardTitle>
+                    <CardDesc>{data.description}</CardDesc>
+                </CardTitleSection>
+                <Button text={data.ctaLabel} onClick={handleNext} reverse={"true"}/>
             </Card>
         </OnboardingWrapper>
     );
@@ -63,7 +61,6 @@ const OnboardingWrapper = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    /* align-items: center; */
     border: 1px solid black;
 `
 const SkipHeader = styled.header`
@@ -72,6 +69,7 @@ const SkipHeader = styled.header`
     align-items: center;
     justify-content: flex-end;
     padding: 1.3rem 2rem;
+    border-bottom: 1px solid #D0D0D0;
 `;
 const SkipButton = styled.button`
     width: 143px;
@@ -92,44 +90,51 @@ const Body = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 97px;
+    margin: 97px 0 40px 0;
 `
 const Image = styled.img`
     width: 100%;
 `;
 const Card = styled.main`
-    height: 363.46px;
-    margin-inline: calc(0* 2rem);
-    background: #ffffff;
-    border: 1px solid red;
-    border-radius: 40px 40px 0 0;
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
     position: relative;
-    overflow: hidden;
-    padding: 1rem 2rem 2rem 2rem;
+    padding: 24px 2rem 2rem 2rem;
+    border-radius: 40px 40px 0 0;
+    border: 1px solid red;
 `;
 const Dots = styled.span`
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: ${({ $active }) => ($active ? "#ff8a00" : "#e9d8c8")};
-  transition: background 0.2s ease;
+    width: 70px;
+    height: 4px;
+    border-radius: 5px;
+    background: ${({ $active }) => ($active ? "#FF7300" : "#FF9B4A")};
+    transition: background 0.2s ease;
 `;
-const Card_Body = styled.div`
-  padding: 20px 24px 28px;
+const CardTitleSection = styled.div`
+    width: 100%;
+    height: 175px;
+    padding: 30px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+`;
+const CardTitle = styled.p`
+    font-size: 42px;
+    font-family: "Pretendard-SemiBold";
+    color: #222222;
+    line-height: 50px;
 `;
 
-const Card_Body_Title = styled.h2`
-  font-size: 20px;
-  font-weight: 800;
-  color: #262626;
-  margin: 8px 0 10px;
-`;
-
-const Card_Body_Desc = styled.p`
-  font-size: 14px;
-  line-height: 1.55;
-  color: #6b6b6b;
+const CardDesc = styled.p`
+    width: 100%;
+    height: 80px;
+    font-size: 24px;
+    font-family: "Pretendard-Medium";
+    line-height: 40px;
+    color: #4D4D4D;
 `;
 
 export default Onboarding;

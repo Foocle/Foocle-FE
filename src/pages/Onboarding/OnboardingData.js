@@ -1,5 +1,3 @@
-// 온보딩 내용 (js 객체 배열 형태로 데이터 관리)
-
 const OnboardingData = [
     {
         id: 1,
