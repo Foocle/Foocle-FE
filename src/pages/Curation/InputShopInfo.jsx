@@ -1,46 +1,45 @@
 // 가게 정보 입력 페이지
 // 카테고리 이미지는 public/img 폴더 안에 저장
-import React, { useState, useEffect } from 'react';
+
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import useHeaderStore from '../../stores/headerStore';
 import { Button } from '../../components/Button';
 import InstructionCard from '../../components/InstructionCard';
-// Mock 데이터:
+import { useNavigate } from 'react-router-dom';
+import StepperComponent from '../../components/ProgressBar';
+
+// Mock 데이터: 따로 관리하면 좋을듯
 const categories = [
-  { name: '한식', img: '/img/category-korean.png' },
-  { name: '피자', img: '/img/category-pizza.png' },
-  { name: '돈까스', img: '/img/category-porkcutlet.png' },
-  { name: '일식', img: '/img/category-japanese.png' },
-  { name: '분식', img: '/img/category-snack.png' },
-  { name: '치킨', img: '/img/category-chicken.png' },
-  { name: '족발/보쌈', img: '/img/category-jokbal.png' },
-  { name: '찜/탕', img: '/img/category-steam.png' },
-  { name: '구이', img: '/img/category-grill.png' },
-  { name: '중식', img: '/img/category-chinese.png' },
-  { name: '회/해물', img: '/img/category-sushi.png' },
-  { name: '양식', img: '/img/category-western.png' },
-  { name: '커피/차', img: '/img/category-cafe.png' },
-  { name: '디저트', img: '/img/category-dessert.png' },
-  { name: '아시안', img: '/img/category-asian.png' },
-  { name: '샐러드', img: '/img/category-salad.png' },
-  { name: '버거', img: '/img/category-burger.png' },
-  { name: '멕시칸', img: '/img/category-mexican.png' },
-  { name: '도시락', img: '/img/category-lunchbox.png' },
-  { name: '죽', img: '/img/category-porridge.png' },
+  { name: '한식', img: '/public/img/category_gogi.svg' },
+  { name: '피자', img: '/img/category_gogi.svg' },
+  { name: '돈까스', img: '/img/category_gogi.svg' },
+  { name: '일식', img: '/img/category_gogi.svg' },
+  { name: '분식', img: '/img/category_gogi.svg' },
+  { name: '치킨', img: '/img/category_gogi.svg' },
+  { name: '족발/보쌈', img: '/img/category_gogi.svg' },
+  { name: '찜/탕', img: '/img/category_gogi.svg' },
+  { name: '구이', img: '/img/category_gogi.svg' },
+  { name: '중식', img: '/img/category_gogi.svg' },
+  { name: '회/해물', img: '/img/category_gogi.svg' },
+  { name: '양식', img: '/img/category_gogi.svg' },
+  { name: '커피/차', img: '/img/category_gogi.svg' },
+  { name: '디저트', img: '/img/category_gogi.svg' },
+  { name: '아시안', img: '/img/category_gogi.svg' },
+  { name: '샐러드', img: '/img/category_gogi.svg' },
+  { name: '버거', img: '/img/category_gogi.svg' },
+  { name: '멕시칸', img: '/img/category_gogi.svg' },
+  { name: '도시락', img: '/img/category_gogi.svg' },
+  { name: '죽', img: '/img/category_gogi.svg' },
 ];
 
 const InputShopInfo = () => {
   // Header 상태 관리
+  const navigate = useNavigate();
   const setHeaderConfig = useHeaderStore((state) => state.setHeaderConfig);
   const resetHeaderConfig = useHeaderStore((state) => state.resetHeaderConfig);
 
-  const steps = [
-    { number: 1, label: '가게 정보 입력' },
-    { number: 2, label: '이미지 업로드' },
-    { number: 3, label: '영상스타일 설정' },
-  ];
-
-  const activeStep = 1; // 현재 활성화된 스텝
+  const activeSteps = [1]; // 현재 활성화된 스텝
 
   useEffect(() => {
     setHeaderConfig({
@@ -65,22 +64,13 @@ const InputShopInfo = () => {
       hours,
       selectedCategory,
     });
-    alert('콘솔에서 입력된 정보를 확인하세요!');
+    alert('콘솔에 정보 찍고 다음 페이지로 넘어갑니다');
+    navigate('/imageupload');
   };
 
   return (
     <PageWrapper>
-      <Stepper>
-        {steps.map((step, index) => (
-          <React.Fragment key={step.number}>
-            <Step active={step.number === activeStep}>
-              <StepNumber active={step.number === activeStep}>{step.number}</StepNumber>
-              {step.label}
-            </Step>
-            {index < steps.length - 1 && <StepSeparator>----</StepSeparator>}
-          </React.Fragment>
-        ))}
-      </Stepper>
+      <StepperComponent activeSteps={activeSteps} />
 
       <InstructionCard text={'상호명, 위치, 영업시간, 음식 카테고리만 입력하면 준비 완료!'} />
       <Form>
@@ -120,7 +110,7 @@ const InputShopInfo = () => {
               value={hours.start}
               onChange={(e) => setHours({ ...hours, start: e.target.value })}
             />
-            <span>~</span>
+            <Tilde>~</Tilde>
             <TimeInput type="time" value={hours.end} onChange={(e) => setHours({ ...hours, end: e.target.value })} />
           </TimeInputWrapper>
         </FormSection>
@@ -158,60 +148,11 @@ const PageWrapper = styled.div`
   align-items: center;
 `;
 
-const Stepper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 1rem;
-  color: #cccccc;
-  font-weight: bold;
-  gap: 0.5rem;
-`;
-
-const Step = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem; /* 숫자와 텍스트 사이 간격 */
-  color: ${(props) => (props.active ? '#333' : '#cccccc')};
-  font-weight: bold;
-`;
-
-const StepNumber = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.5rem; /* 24px */
-  height: 1.5rem; /* 24px */
-  border-radius: 50%;
-  color: white;
-  font-weight: bold;
-  font-size: 0.9rem;
-  background-color: ${(props) => (props.active ? '#FF7300' : '#cccccc')};
-`;
-
-const StepSeparator = styled.span`
-  color: #cccccc;
-  font-weight: bold;
-`;
-
-const InfoBar = styled.div`
-  width: 100%;
-  background-color: #f2f2f2;
-  border-radius: 8px;
-  padding: 0.8rem;
-  text-align: center;
-  font-size: 0.9rem;
-  color: #555;
-  margin-bottom: 2rem;
-  box-sizing: border-box;
-`;
-
 const Form = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2.5rem;
 `;
 
 const FormSection = styled.div`
@@ -219,57 +160,101 @@ const FormSection = styled.div`
 `;
 
 const Label = styled.label`
-  font-weight: bold;
-  font-size: 1.1rem;
+  font-weight: 600;
+  font-size: 1.5rem;
+  font-family: Pretendard;
   margin-bottom: 0.75rem;
   display: block;
 `;
 
 const InputWrapper = styled.div`
-  position: relative;
+  display: flex;
+  position: relative; // 자식 요소의 absolute 포지셔닝 기준
+  height: 4.375rem;
+  padding: 0.5rem 0.75rem;
+  align-items: center;
+  border-radius: 0.9375rem;
+  border: 2px solid var(--Gray-scale-3, #d0d0d0); // border 임의 변경
+  background: #fff;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+  /* 자식 요소(Input)가 포커스되면 InputWrapper의 스타일을 변경합니다. */
+  &:focus-within {
+    border-color: #ff7300;
+  }
 `;
 
 const Input = styled.input`
+  flex: 1;
   width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 1rem;
+  height: 100%;
+  font-size: 1.5rem;
   box-sizing: border-box;
-
+  border: none;
+  outline: none;
+  background-color: transparent;
+  font-weight: 500;
+  margin-right: 0.03rem;
   &::placeholder {
     color: #ccc;
   }
 `;
 
 const CharCounter = styled.span`
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #999;
-  font-size: 0.9rem;
+  color: var(--Gray-scale-2, #4d4d4d);
+  text-align: right;
+
+  font-family: Pretendard;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.75rem;
 `;
 
 const TimeInputWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+`;
 
-  span {
-    color: #999;
-    font-size: 1.2rem;
+const TimeInput = styled.input`
+  flex: 1;
+  height: 4.375rem;
+  padding: 0 1rem;
+  border-radius: 0.9375rem;
+  border: 2px solid var(--Gray-scale-3, #d0d0d0);
+  background: #fff;
+  transition: border-color 0.2s ease-in-out;
+  outline: none;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  text-align: center;
+  color: #4d4d4d;
+
+  &:focus {
+    border-color: #ff7300;
+  }
+
+  &::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
   }
 `;
 
-const TimeInput = styled(Input)`
-  text-align: center;
+const Tilde = styled.span`
+  color: var(--Gray-scale-2, #4d4d4d);
+  font-feature-settings: 'liga' off, 'clig' off;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 1.54rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 2.31rem;
 `;
-
 const CategoryGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
+  gap: 0.75rem 1rem;
 `;
 
 const CategoryItem = styled.div`
@@ -288,8 +273,8 @@ const CategoryItem = styled.div`
 `;
 
 const CategoryImage = styled.img`
-  width: 50px;
-  height: 50px;
+  width: 5rem;
+  height: 5rem;
   border-radius: 50%;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
@@ -302,5 +287,5 @@ const CategoryName = styled.span`
 `;
 
 const MarginBottom = styled.div`
-  margin-bottom: 2rem;
+  margin-bottom: 5rem;
 `;
