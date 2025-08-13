@@ -1,7 +1,7 @@
 // 가이드 지시 메시지 (회색 배경에 체크 아이콘과 설명 텍스트가 있는 카드 형태) 컴포넌트
 
 import styled from 'styled-components';
-import IconCheck from '../../public/img/icon_check.svg';
+import IconCheck from '../assets/img/icon_check.svg';
 const InstructionCard = ({ text }) => {
   return (
     <InfoBar>
