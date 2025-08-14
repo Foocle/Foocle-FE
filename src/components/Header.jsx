@@ -5,8 +5,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import useHeaderStore from '../stores/headerStore';
-import IconDone from '../../public/img/icon_done.svg';
-import XIcon from '../../public/img/icon_x.svg';
+import IconDone from '../assets/img/icon_done.svg';
+import XIcon from '../assets/img/icon_x.svg';
 
 const HeaderWrapper = styled.header`
   max-width: 600px;
