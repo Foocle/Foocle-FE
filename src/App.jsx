@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
+import Loading from './pages/Loading';
 import LoginStart from './pages/Join/LoginStart';
 import Onboarding from './pages/Onboarding/Onboarding';
 import Start from './pages/Start';
@@ -12,6 +13,7 @@ function App() {
       <Route path="/loginstart" element={<LoginStart />} />
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/" element={<Start />} />
+      <Route path="/loading" element={<Loading />} />
 
       {/* MainLayout 상속받는 그룹*/}
       <Route element={<MainLayout />}>
