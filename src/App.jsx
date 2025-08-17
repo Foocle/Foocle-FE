@@ -6,6 +6,8 @@ import InputShopInfo from './pages/Curation/InputShopInfo';
 import MainLayout from './layout/MainLayout';
 import Test from './pages/Curation/Test';
 import ImageUpload from './pages/Curation/ImageUpload';
+import SetVideoStyle from './pages/Curation/SetVideoStyle';
+
 function App() {
   return (
     <Routes>
@@ -17,6 +19,7 @@ function App() {
       <Route element={<MainLayout />}>
         <Route path="shopinfo" element={<InputShopInfo />} />
         <Route path="imageupload" element={<ImageUpload />} />
+        <Route path="setvideo" element={<SetVideoStyle />} />
         <Route path="test" element={<Test />} />
       </Route>
     </Routes>

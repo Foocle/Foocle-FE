@@ -21,7 +21,7 @@ const InfoBar = styled.div`
   border-radius: 8px;
   padding: 0.8rem;
   color: #555;
-  margin-bottom: 2.5rem;
+  margin-bottom: 0.5rem;
   box-sizing: border-box;
   color: var(--Gray-scale-5, #868686);
   font-family: Pretendard;

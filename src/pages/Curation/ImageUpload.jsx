@@ -7,7 +7,10 @@ import StepperComponent from '../../components/ProgressBar';
 import ImageUploaderCard from '../../components/ImageUploaderCard';
 import IconPlus from '../../assets/img/icon_plus.svg';
 import InstructionCard from '../../components/InstructionCard';
-
+import { Button } from '../../components/Button';
+import VideoModal from '../../components/VideoModal';
+import IconImg from '../../assets/img/icon_image.svg';
+import { useNavigate } from 'react-router-dom';
 // 각 섹션의 제목을 정의
 const SECTIONS = {
   storeExterior: '1. 가게 외관',
@@ -20,15 +23,9 @@ const ImageUpload = () => {
   const setHeaderConfig = useHeaderStore((state) => state.setHeaderConfig);
   const resetHeaderConfig = useHeaderStore((state) => state.resetHeaderConfig);
   const activeSteps = [1, 2];
+  const navigate = useNavigate();
 
-  // 모든 이미지 카드 데이터를 통합 관리하는 state
-  const [cards, setCards] = useState({
-    storeExterior: [{ id: Date.now() }],
-    storeInterior: [{ id: Date.now() + 1 }],
-    cookingProcess: [{ id: Date.now() + 2 }],
-    foodPhotos: [{ id: Date.now() + 3 }],
-  });
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   useEffect(() => {
     setHeaderConfig({
       showBackButton: true,
@@ -39,6 +36,20 @@ const ImageUpload = () => {
     return () => resetHeaderConfig();
   }, [setHeaderConfig, resetHeaderConfig]);
 
+  // 모든 이미지 카드 데이터를 통합 관리하는 state
+  const [cards, setCards] = useState({
+    storeExterior: [{ id: Date.now() }],
+    storeInterior: [{ id: Date.now() + 1 }],
+    cookingProcess: [{ id: Date.now() + 2 }],
+    foodPhotos: [{ id: Date.now() + 3 }],
+  });
+
+  //마지막 다음 버튼
+  const handleNextClick = () => {
+    console.log('요소 확인하는거 나중에 추가 예정');
+    alert('다음 페이지로 넘어갑니다');
+    navigate('/setvideo');
+  };
   // 특정 섹션에 카드를 추가하는 함수
   const handleAddCard = (sectionKey) => {
     setCards((prevCards) => ({
@@ -70,6 +81,12 @@ const ImageUpload = () => {
     <PageWrapper>
       <StepperComponent activeSteps={activeSteps} />
       <InstructionCard text={'음식 사진은 최소 5장이 필요해요! 음식 사진은 필수'} />
+      <ButtonWrapper>
+        <GuideButton onClick={() => setIsModalOpen(true)}>
+          <img src={IconImg} />
+          사진 가이드 예시
+        </GuideButton>
+      </ButtonWrapper>
 
       {Object.entries(SECTIONS).map(([key, title]) => (
         <SectionContainer key={key}>
@@ -88,6 +105,8 @@ const ImageUpload = () => {
           </AddButton>
         </SectionContainer>
       ))}
+      <Button text={'다음'} reverse={true} onClick={handleNextClick}></Button>
+      <VideoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </PageWrapper>
   );
 };
@@ -100,7 +119,32 @@ const PageWrapper = styled.div`
   gap: 1.5rem;
   padding-bottom: 2rem;
 `;
+const ButtonWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+`;
+const GuideButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 30%;
+  transform: translateY(-50%);
+  background-color: #eaf2ff;
+  color: #4a75e2;
+  border: none;
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
 
+  &:hover {
+    background-color: #dbe8ff;
+  }
+`;
 const SectionContainer = styled.div`
   display: flex;
   flex-direction: column;

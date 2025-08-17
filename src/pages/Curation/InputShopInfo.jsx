@@ -8,31 +8,7 @@ import { Button } from '../../components/Button';
 import InstructionCard from '../../components/InstructionCard';
 import { useNavigate } from 'react-router-dom';
 import StepperComponent from '../../components/ProgressBar';
-
-// Mock 데이터: 따로 관리하면 좋을듯
-const categories = [
-  { name: '한식', img: 'src/assets/img/category_gogi.svg' },
-  { name: '피자', img: 'src/assets/img/category_gogi.svg' },
-  { name: '돈까스', img: 'src/assets/img/category_gogi.svg' },
-  { name: '일식', img: 'src/assets/img/category_gogi.svg' },
-  { name: '분식', img: 'src/assets/img/category_gogi.svg' },
-  { name: '치킨', img: 'src/assets/img/category_gogi.svg' },
-  { name: '족발/보쌈', img: 'src/assets/img/category_gogi.svg' },
-  { name: '찜/탕', img: 'src/assets/img/category_gogi.svg' },
-  { name: '구이', img: 'src/assets/img/category_gogi.svg' },
-  { name: '중식', img: 'src/assets/img/category_gogi.svg' },
-  { name: '회/해물', img: 'src/assets/img/category_gogi.svg' },
-  { name: '양식', img: 'src/assets/img/category_gogi.svg' },
-  { name: '커피/차', img: 'src/assets/img/category_gogi.svg' },
-  { name: '디저트', img: 'src/assets/img/category_gogi.svg' },
-  { name: '아시안', img: 'src/assets/img/category_gogi.svg' },
-  { name: '샐러드', img: 'src/assets/img/category_gogi.svg' },
-  { name: '버거', img: 'src/assets/img/category_gogi.svg' },
-  { name: '멕시칸', img: 'src/assets/img/category_gogi.svg' },
-  { name: '도시락', img: 'src/assets/img/category_gogi.svg' },
-  { name: '죽', img: 'src/assets/img/category_gogi.svg' },
-];
-
+import CurationData from './CurationData';
 const InputShopInfo = () => {
   // Header 상태 관리
   const navigate = useNavigate();
@@ -118,14 +94,14 @@ const InputShopInfo = () => {
         <FormSection>
           <Label>카테고리</Label>
           <CategoryGrid>
-            {categories.map((cat) => (
+            {CurationData.map((CurationData) => (
               <CategoryItem
-                key={cat.name}
-                onClick={() => setSelectedCategory(cat.name)}
-                selected={selectedCategory === cat.name}
+                key={CurationData.name}
+                onClick={() => setSelectedCategory(CurationData.name)}
+                selected={selectedCategory === CurationData.name}
               >
-                <CategoryImage src={cat.img} alt={cat.name} />
-                <CategoryName>{cat.name}</CategoryName>
+                <CategoryImage src={CurationData.img} alt={CurationData.name} />
+                <CategoryName>{CurationData.name}</CategoryName>
               </CategoryItem>
             ))}
           </CategoryGrid>
