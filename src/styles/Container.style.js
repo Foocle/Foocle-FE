@@ -9,6 +9,6 @@ export const Container = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 1.875rem;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   box-sizing: border-box;
 `;

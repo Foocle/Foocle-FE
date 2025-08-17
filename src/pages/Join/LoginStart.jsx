@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Container } from '../../styles/Container.style.js';
 import LogoText from '../../assets/img/logo_text.svg';
 import KakaoLogo from '../../assets/img/kakao_logo.svg';
+import { useNavigate } from 'react-router-dom';
 
 const TitleWrapper = styled.div`
   display: flex;
@@ -106,6 +107,7 @@ const Disclaimer = styled.p`
 `;
 
 const LoginStart = () => {
+  const navigate = useNavigate();
   return (
     <Container>
       <TitleWrapper>
@@ -126,7 +128,7 @@ const LoginStart = () => {
         <SignupBtn>
           <p>회원가입하기</p>
         </SignupBtn>
-        <a>비회원으로 시작하기</a>
+        <a onClick={() => navigate('/shopinfo')}>비회원으로 시작하기</a>
       </BtnWrapper>
       <Disclaimer>가입을 진행할 경우, 이용약관과 개인정보 수집 및 이용에 대해 동의한 것으로 간주됩니다.</Disclaimer>
     </Container>
