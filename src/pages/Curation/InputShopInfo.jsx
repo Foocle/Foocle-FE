@@ -128,7 +128,7 @@ const Form = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 2rem;
 `;
 
 const FormSection = styled.div`
@@ -136,27 +136,26 @@ const FormSection = styled.div`
 `;
 
 const Label = styled.label`
-  font-weight: 600;
-  font-size: 1.5rem;
-  font-family: Pretendard;
-  margin-bottom: 0.75rem;
   display: block;
+  font-family: 'Pretendard-SemiBold';
+  font-size: clamp(1.6rem, 4.5vw, 2rem);
+  margin-bottom: 1.2rem;
 `;
 
 const InputWrapper = styled.div`
   display: flex;
-  position: relative; // 자식 요소의 absolute 포지셔닝 기준
-  height: 4.375rem;
-  padding: 0.5rem 0.75rem;
   align-items: center;
-  border-radius: 0.9375rem;
-  border: 2px solid var(--Gray-scale-3, #d0d0d0); // border 임의 변경
+  position: relative;
+  height: 5.2rem;
+  padding: 0 1.6rem;
+  border-radius: 1rem;
+  border: 1px solid var(--Gray-scale-3, #d0d0d0);
   background: #fff;
-  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 
-  /* 자식 요소(Input)가 포커스되면 InputWrapper의 스타일을 변경합니다. */
   &:focus-within {
     border-color: #ff7300;
+    box-shadow: 0 0 0 2px rgba(255, 115, 0, 0.2);
   }
 `;
 
@@ -164,53 +163,44 @@ const Input = styled.input`
   flex: 1;
   width: 100%;
   height: 100%;
-  font-size: 1.5rem;
-  box-sizing: border-box;
   border: none;
   outline: none;
   background-color: transparent;
-  font-weight: 500;
-  margin-right: 0.03rem;
+  font-family: 'Pretendard-Medium';
+  font-size: 1.6rem;
   &::placeholder {
-    color: #ccc;
+    color: #bdbdbd;
   }
 `;
 
 const CharCounter = styled.span`
-  color: var(--Gray-scale-2, #4d4d4d);
+  color: var(--Gray-scale-3, #d0d0d0);
   text-align: right;
-
-  font-family: Pretendard;
-  font-size: 0.875rem;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 1.75rem;
+  font-family: 'Pretendard-Medium';
+  white-space: nowrap;
+  padding-left: 1.2rem;
+  font-size: 1.3rem;
 `;
 
 const TimeInputWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1.2rem;
 `;
 
 const TimeInput = styled.input`
   flex: 1;
-  height: 4.375rem;
-  padding: 0 1rem;
-  border-radius: 0.9375rem;
-  border: 2px solid var(--Gray-scale-3, #d0d0d0);
+  height: 5.2rem;
+  padding: 0 1.6rem;
+  border-radius: 1rem;
+  border: 1px solid var(--Gray-scale-3, #d0d0d0);
   background: #fff;
-  transition: border-color 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  font-family: 'Pretendard-Medium';
   outline: none;
-  font-family: 'Pretendard', sans-serif;
-  font-size: 1.5rem;
-  font-weight: 500;
+  font-size: 1.6rem;
   text-align: center;
   color: #4d4d4d;
-
-  &:focus {
-    border-color: #ff7300;
-  }
 
   &::-webkit-calendar-picker-indicator {
     display: none;
@@ -219,49 +209,53 @@ const TimeInput = styled.input`
 `;
 
 const Tilde = styled.span`
-  color: var(--Gray-scale-2, #4d4d4d);
-  font-feature-settings: 'liga' off, 'clig' off;
+  color: #868686;
   font-family: 'Pretendard', sans-serif;
-  font-size: 1.54rem;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 2.31rem;
+  font-size: 2rem;
+  font-family: 'Pretendard-Regular';
 `;
+
 const CategoryGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem 1rem;
-`;
+  gap: 1.6rem 1.2rem;
 
+  /* 768px 이상 태블릿 화면에서는 5열로 변경 */
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+`;
 const CategoryItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 12px;
+  padding: 0.8rem 0.4rem;
+  border-radius: 1.2rem;
   border: 2px solid ${(props) => (props.selected ? '#FF7300' : 'transparent')};
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    background-color: #f0eadd;
+    background-color: #f9f9f9;
   }
 `;
 
 const CategoryImage = styled.img`
-  width: 5rem;
-  height: 5rem;
+  width: clamp(5rem, 14vw, 6.5rem);
+  height: clamp(5rem, 14vw, 6.5rem);
   border-radius: 50%;
-  background-color: #fff;
+  background-color: #f0f0f0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.8rem;
 `;
 
 const CategoryName = styled.span`
-  font-size: 0.9rem;
+  font-size: clamp(1.2rem, 3vw, 1.4rem);
   color: #333;
+  text-align: center;
+  word-break: keep-all;
 `;
 
 const MarginBottom = styled.div`
-  margin-bottom: 5rem;
+  height: 10rem;
 `;

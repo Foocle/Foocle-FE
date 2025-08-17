@@ -13,19 +13,18 @@ import SetVideoStyle from './pages/Curation/SetVideoStyle';
 function App() {
   return (
     <Routes>
+      <Route path="/" element={<Start />} />
       <Route path="/loginstart" element={<LoginStart />} />
       <Route path="/onboarding" element={<Onboarding />} />
-      <Route path="/" element={<Start />} />
       <Route path="/loading" element={<Loading />} />
 
       {/* MainLayout 상속받는 그룹*/}
       <Route element={<MainLayout />}>
         <Route path="/shopinfo" element={<InputShopInfo />} />
         <Route path="/imageupload" element={<ImageUpload />} />
-        <Route path="/test" element={<Test />} />
         <Route path="/setvideo" element={<SetVideoStyle />} />
-
         <Route path="/videocomplete" element={<VideoComplete />} />
+        <Route path="/test" element={<Test />} />
       </Route>
     </Routes>
   );
