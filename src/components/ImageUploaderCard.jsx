@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import IconTrash from '../assets/img/icon_trashcan.svg';
 import IconPlus from '../assets/img/icon_plus.svg';
 
-const ImageUploaderCard = ({ title, cardData, onUpdate, onDelete }) => {
+const ImageUploaderCard = ({ title, cardData, onUpdate, onDelete, icon }) => {
   const fileInputRef = useRef(null);
 
   // 이미지나 파일이 변경되면 부모의 onUpdate 함수를 호출합니다.
@@ -34,17 +34,15 @@ const ImageUploaderCard = ({ title, cardData, onUpdate, onDelete }) => {
   const { preview, description = '' } = cardData || {};
   return (
     <SectionWrapper>
-      {/* title이 있을 때만 렌더링 */}
       {title && <Title>{title}</Title>}
       <CardWrapper>
         <UploadArea>
-          {/* preview가 있으면 이미지를, 없으면 플레이스홀더를 보여줍니다. */}
           <ImagePreview onClick={!preview ? triggerFileSelect : undefined}>
             {preview ? (
               <StyledImage src={preview} alt="Preview" />
             ) : (
               <UploadPlaceholder>
-                <img src={IconPlus} alt="사진 추가" />
+                <img src={icon || IconPlus} alt="사진 추가" />
                 <span>사진 추가</span>
               </UploadPlaceholder>
             )}
@@ -76,36 +74,36 @@ const ImageUploaderCard = ({ title, cardData, onUpdate, onDelete }) => {
 
 export default ImageUploaderCard;
 
+// --- Styled Components ---
+
 const SectionWrapper = styled.div`
   width: 100%;
-  max-width: 400px;
-  margin-bottom: 1.5rem;
 `;
 
 const Title = styled.h3`
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-family: 'Pretendard-SemiBold';
   color: #333;
-  margin-bottom: 0.75rem;
+  font-size: clamp(1.8rem, 5vw, 2.2rem);
+  margin-bottom: 1.2rem;
 `;
 
 const CardWrapper = styled.div`
-  background-color: #f7f7f7;
-  border-radius: 12px;
-  padding: 1rem;
+  background-color: #f0f0f0;
+  border-radius: 1.2rem;
+  padding: 1.6rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1.6rem;
 `;
 
 const UploadArea = styled.div`
-  width: 100%;
+  flex-shrink: 0;
 `;
 
 const ImagePreview = styled.div`
-  width: 120px;
-  height: 120px;
-  border-radius: 8px;
+  width: clamp(11rem, 30vw, 15rem);
+  height: clamp(11rem, 30vw, 15rem);
+  border-radius: 1rem;
   background-color: #fff;
   display: flex;
   align-items: center;
@@ -121,8 +119,8 @@ const UploadPlaceholder = styled.div`
   align-items: center;
   justify-content: center;
   color: #868686;
-  font-size: 0.9rem;
-  gap: 8px;
+  gap: 0.8rem;
+  font-size: clamp(1.2rem, 3vw, 1.4rem);
 `;
 
 const StyledImage = styled.img`
@@ -139,28 +137,36 @@ const DescriptionInputWrapper = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  height: 3.5rem;
-  padding: 0 1rem;
+  height: 5.2rem;
+  padding: 0 1.2rem;
   background-color: #fff;
-  border-radius: 8px;
+  border-radius: 1rem;
   border: 1px solid #e0e0e0;
   box-sizing: border-box;
+  transition: all 0.2s ease-in-out;
+
+  &:focus-within {
+    border-color: #ff7300;
+    box-shadow: 0 0 0 2px rgba(255, 115, 0, 0.2);
+  }
 `;
 
 const DescriptionInput = styled.input`
   flex: 1;
   border: none;
   outline: none;
-  font-size: 1rem;
   background-color: transparent;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 1.5rem;
   &::placeholder {
-    color: #ccc;
+    color: #bdbdbd;
   }
 `;
 
 const CharCounter = styled.span`
   color: #999;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
+  padding-left: 1.2rem;
 `;
 
 const Footer = styled.div`
@@ -172,15 +178,17 @@ const Footer = styled.div`
 const DeleteButton = styled.button`
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.4rem;
   background: none;
   border: none;
   cursor: pointer;
   color: #868686;
-  font-size: 0.9rem;
-  padding: 0.25rem;
+  padding: 0.4rem;
+  border-radius: 0.4rem;
+  transition: all 0.2s ease;
+  font-size: 1.3rem;
 
-  &:hover {
-    color: #333;
+  & > img {
+    width: 1.4rem;
   }
 `;
