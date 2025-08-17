@@ -7,7 +7,7 @@ import StepperComponent from '../../components/ProgressBar';
 import ImageUploaderCard from '../../components/ImageUploaderCard';
 import IconPlus from '../../assets/img/icon_plus.svg';
 import InstructionCard from '../../components/InstructionCard';
-import VideoModal from '../../components/VideoModal';
+import ImageGuideModal from '../../components/ImageGuideModal';
 import IconImg from '../../assets/img/icon_image.svg';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/Button';
@@ -105,7 +105,7 @@ const ImageUpload = () => {
         </SectionContainer>
       ))}
       <Button text={'다음'} reverse={true} onClick={handleNextClick}></Button>
-      <VideoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <ImageGuideModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </PageWrapper>
   );
 };

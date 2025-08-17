@@ -3,9 +3,12 @@ import { useState, useEffect } from "react";
 import useHeaderStore from '../stores/headerStore';
 import styled from "styled-components";
 import TextareaAutosize from "react-textarea-autosize";
-import ExVideo from "../assets/video/ex_video.mp4";
+import ExVideo from "../assets/video/EXvideo.mp4";
 import Blog from "../assets/img/blog.svg";
 import URL from "../assets/img/URL.svg";
+import Instagram from "../assets/img/Instagram.svg";
+import Kakao from "../assets/img/Vector.svg";
+import VideoOverlay from "../components/VideoModal.jsx";
 
 //styled
 const CONTENT_MAX = 600;
@@ -20,12 +23,12 @@ const PageWrapper = styled.div`
 const TitleSection = styled.div`
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: clamp(6px, 2vw, 12px);
 
     width: 100%;
-    max-width: 540px;
-    height: 70px;
-    padding: 21px 0 21px 16px;
+    max-width: 600px;
+    height: clamp(48px, 10vh, 70px);
+    padding: clamp(10px, 2vh, 21px) 0 clamp(10px, 2vh, 21px) clamp(10px, 5vw, 16px);
     box-sizing: border-box;
 
     border: 1px solid transparent;
@@ -38,10 +41,10 @@ const TitleSection = styled.div`
 `;
 // 추천 제목
 const AItitle = styled.label`
-  white-space: nowrap;
-  font-size: 18px;
-  font-family: "Pretendard-Semibold";
-  color: #4D4D4D;
+    white-space: nowrap;
+    font-size: clamp(14px, 4.5vw, 18px);
+    font-family: "Pretendard-Semibold";
+    color: #4D4D4D;
 `;
 const TitleInput = styled.input`
     min-width: 0; /* 길 때 수평 스크롤/깨짐 방지 */
@@ -50,7 +53,7 @@ const TitleInput = styled.input`
     outline: none;
     background: transparent;
 
-    font-size: 18px;
+    font-size: clamp(14px, 4.5vw, 18px);
     font-family: "Pretendard-Regular";
     color: #868686;
 
@@ -62,10 +65,10 @@ const TitleInput = styled.input`
 //영상 썸네일
 const ThumbSection = styled.div`
     width: 100%;
-    height: 412px;
+    height: clamp(300px, 55vh, 412px);
     display: flex;
     justify-content: center;
-    margin: 14.67px 0 20px 0;
+    margin: clamp(10px, 2vh, 14.67px) 0 clamp(12px, 2.8vh, 20px) 0;
 `;
 const ThumbCard = styled.div`
     width: fit-content;
@@ -76,8 +79,8 @@ const ThumbCard = styled.div`
     align-items: flex-end;
 `;
 const ThumbVideo = styled.video`
-    width: 294px;
-    height: 360px;
+    width: clamp(220px, 78vw, 294px);
+    height: clamp(270px, 48vh, 360px);
     object-fit: cover;
     border-radius: 20px;
     cursor: pointer;
@@ -86,20 +89,20 @@ const ThumbVideo = styled.video`
 const AlertBubble = styled.div`
     display: flex;
     align-items: center;
-    width: 243px; 
-    height: 32px;
+    width: clamp(180px, 60vw, 243px); 
+    height: clamp(26px, 4vh, 32px);
     position: absolute;
     top: 0;
-    left: 221px;
+    left: clamp(140px, 58vw, 221px);
     transform: translateX(-70%);
     background-color: #FF7300;
     border-radius: 10px;
     white-space: nowrap;
     p {
-        font-size: 14px;
+        font-size: clamp(12px, 3.5vw, 14px);
         font-family: "Pretendard-SemiBold";
         color: #FFFFFF;
-        padding: 0 10px;
+        padding: 0 clamp(8px, 2.2vw, 10px);
     }
 
     /* 아래 삼각형 꼬리 */
@@ -109,16 +112,16 @@ const AlertBubble = styled.div`
     bottom: -6px;
     left: 86%;
     transform: translateX(-50%);
-    border-width: 6px 6px 1px 6px;
+    border-width: clamp(5px, 1.5vw, 6px) clamp(5px, 1vw, 6px) 1px clamp(5px, 1vw, 6px);
     border-style: solid;
-    border-color: #ff7300 transparent transparent transparent;
+    border-color: #FF7300 transparent transparent transparent;
   }
 `;
 // 오른쪽 위 ... 버튼
 const ShareButton = styled.button`
     position: absolute;
-    top: 70px;
-    left: 238px;
+    top: clamp(46px, 10.4vh, 70px);
+    left: clamp(160px, 61vw, 238px);
 
     border: none;
     outline: none;
@@ -129,11 +132,11 @@ const ShareButton = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: clamp(4px, 1.8vw, 7px);
 `;
 const Dot = styled.span`
-    width: 7px;
-    height: 7px;
+    width: clamp(5px, 1.7vw, 7px);
+    height: clamp(5px, 1.7vw, 7px);
     border-radius: 50%;
     background: #FFFFFF;
 `;
@@ -144,26 +147,24 @@ const TextSection = styled.section`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    gap: 10px;
+    gap: clamp(6px, 2vw, 10px);
 `
 const Labal = styled.span`
-    font-size: 24px;
+    font-size: clamp(18px, 6vw, 24px);
     font-family: "Pretendard-SemiBold";
     color: #464A4D;
-    margin-top: 30px;
+    margin-top: clamp(20px, 4vh, 30px);
 `;
 const TextArea = styled(TextareaAutosize)`
     width: 100%;
-    /* height: auto; */
     border: 1.54px solid #E8EEF2;
     border-radius: 15px;
-    padding: 20px 10px;
+    padding: clamp(14px, 3.2vw, 20px) clamp(8px, 2.2vw, 10px);
     margin: 0px;
-    font-size: 24px;
+    font-size: clamp(16px, 5vw, 24px);
     font-family: "Pretendard-Medium";
     color: #4D4D4D;
-    line-height: 40px;
-    /* resize: vertical; */
+    line-height: clamp(29px, 8vw, 40px);
     box-sizing: border-box;
     white-space: pre-wrap;
 `;
@@ -173,18 +174,18 @@ const TagWrap = styled.div`
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: clamp(6px, 2vw, 10px);
 `;
 const Tag = styled.button`
     width: auto;
-    height: 36px;
+    height: clamp(28px, 5vh, 36px);
     border: 1px solid #D0D0D0;
     border-radius: 55px;
     background-color: #FFFFFF;
     color: #4D4D4D;
-    font-size: 18px;
+    font-size: clamp(14px, 4vw, 18px);
     font-family: "Pretendard-SemiBold";
-    padding: 4px 16px;
+    padding: clamp(3px, 0.8vw, 4px) clamp(10px, 3.2vw, 16px);
     cursor: pointer;
 `;
 
@@ -214,7 +215,7 @@ const ShareSheetWrapper = styled.div`
 
     border-top-left-radius: 50px;
     border-top-right-radius: 50px;
-    padding: 30px 30px 19.27px 30px;
+    padding: clamp(18px, 4vw, 30px) clamp(18px, 4vw, 30px) clamp(14px, 3vw, 19.27px) clamp(18px, 4vw, 30px);
 
     width: min(100%, ${CONTENT_MAX}px);
     box-sizing: border-box;
@@ -225,7 +226,7 @@ const ShareSheetWrapper = styled.div`
     z-index: 1001;
 `;
 const GrabBar = styled.span`
-    width: 242px;
+    width: clamp(120px, 40vw, 242px);
     border: 2px solid #C4C4C4;
     border-radius: 5px;
 `
@@ -236,8 +237,8 @@ const SNSBtn = styled.div`
     justify-content: space-between;
 
     img {
-        width: 72.98px;
-        height: 72.98px;
+        width: clamp(56px, 19vw, 72.98px);
+        height: clamp(56px, 15vw, 72.98px);
         cursor: pointer;
     }
 `;
@@ -249,9 +250,9 @@ const ShareText = styled.div`
     text-align: center;
     
     span {
-        width: 72.98px;
-        line-height: 28px;
-        font-size: 14px;
+        width: clamp(56px, 19vw, 72.98px);
+        line-height: clamp(20px, 6vw, 28px);
+        font-size: clamp(12px, 3.5vw, 14px);
         font-family: "Pretendard-Medium";
         color: #4D4D4D;
     }
@@ -280,52 +281,15 @@ const VideoComplete = () => {
     const openSheet = () => setIsSheetOpen(true);
     const closeSheet = () => setIsSheetOpen(false);
 
-    // // 드래그 상태
-    // const [isDragging, setIsDragging] = useState(false);
-    // const [dragY, setDragY] = useState(0); // 아래로 끌어내린 거리(px)
-    // const startYRef = useRef(0);
-    // const CLOSE_THRESHOLD = 100; 
-    
-    // //GrabBar를 누를 때 시작
-    // const onPointerDown = (e) => {
-    //     setIsDragging(true);
-    //     startYRef.current = e.clientY ?? (e.touches?.[0]?.clientY || 0);
-    // };
-    // // 이동: 아래로만(양수) 반응
-    // const onPointerMove = (e) => {
-    //     if (!isDragging) return;
-    //     const clientY = e.clientY ?? (e.touches?.[0]?.clientY || 0);
-    //     const delta = clientY - startYRef.current;
-    //     setDragY(delta > 0 ? delta : 0);
-    // };
-    // // 끝: 임계치 넘으면 닫고, 아니면 원위치
-    // const onPointerUp = () => {
-    //     if (!isDragging) return;
-    //     setIsDragging(false);
-    //     if (dragY > CLOSE_THRESHOLD) {
-    //         setDragY(0);
-    //         closeSheet();
-    //     } else {
-    //         setDragY(0);
-    //     }
-    // };
-    // //전역 리스너 등록/해제
-    // useEffect(() => {
-    //     if (!isDragging) return;
-    //     window.addEventListener("pointermove", onPointerMove);
-    //     window.addEventListener("pointerup", onPointerUp);
-    //     return () => {
-    //         window.removeEventListener("pointermove", onPointerMove);
-    //         window.removeEventListener("pointerup", onPointerUp);
-    //     };
-    // }, [isDragging, dragY]);
+    // 영상 오버레이 상태
+    const [isVideoOpen, setIsVideoOpen] = useState(false);
 
-    // // 시트 열릴 때 바디 스크롤 잠금(선택)
-    // useEffect(() => {}
-    //     if (isSheetOpen) document.body.style.overflow = 'hidden';
-    //     else document.body.style.overflow = '';
-    //     return () => { document.body.style.overflow = ''; };
-    // }, [isSheetOpen]);
+    // 시트,영상 열릴 때 스크롤 잠금
+    useEffect(() => {
+        const locked = isSheetOpen || isVideoOpen;
+        document.body.style.overflow = locked ? 'hidden' : '';
+        return () => { document.body.style.overflow = ''; };
+    }, [isSheetOpen, isVideoOpen]);
     
     //incoming data
     const {
@@ -402,6 +366,7 @@ const VideoComplete = () => {
                         loop
                         playsInline
                         controls={false}   
+                        onClick={() => setIsVideoOpen(true)}
                     />
                     <ShareButton onClick={openSheet}>
                         <Dot /><Dot /><Dot />
@@ -439,8 +404,8 @@ const VideoComplete = () => {
             <ShareSheetWrapper $open={isSheetOpen} onClick={(e) => e.stopPropagation()}>
                 <GrabBar/>
                 <SNSBtn>
-                    <img src={Blog} alt="인스타그램"/>
-                    <img src={Blog} alt="카카오톡"/>
+                    <img src={Instagram} alt="인스타그램"/>
+                    <img src={Kakao} alt="카카오톡"/>
                     <img src={Blog} alt="블로그"/>
                     <img src={URL} alt="URL 복사"/>
                 </SNSBtn>
@@ -451,6 +416,13 @@ const VideoComplete = () => {
                     <span>URL 복사</span>
                 </ShareText>
             </ShareSheetWrapper>
+
+            <VideoOverlay
+                open={isVideoOpen}
+                src={ExVideo}
+                onClose={() => setIsVideoOpen(false)}
+                maxWidth={CONTENT_MAX}
+            />
         </PageWrapper>
     );
 }
