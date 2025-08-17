@@ -1,5 +1,6 @@
 // 영상 스타일 설정 페이지
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useHeaderStore from '../../stores/headerStore';
 import StepperComponent from '../../components/ProgressBar';
 import styled, { css } from 'styled-components';
@@ -22,6 +23,7 @@ const STYLE_OPTIONS = [
 ];
 
 const SetVideoStyle = () => {
+  const navigate = useNavigate();
   const setHeaderConfig = useHeaderStore((state) => state.setHeaderConfig);
   const resetHeaderConfig = useHeaderStore((state) => state.resetHeaderConfig);
   const activeSteps = [1, 2, 3];
@@ -148,7 +150,7 @@ const SetVideoStyle = () => {
       </SettingsForm>
 
       {/* 쇼츠 생성하기 버튼 */}
-      <Button text={'쇼츠 생성하기'} reverse={true}></Button>
+      <Button text={'쇼츠 생성하기'} onClick={() => navigate('/loading')} reverse={true}></Button>
     </PageWrapper>
   );
 };
