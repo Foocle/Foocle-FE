@@ -7,22 +7,25 @@ import InputShopInfo from './pages/Curation/InputShopInfo';
 import MainLayout from './layout/MainLayout';
 import Test from './pages/Curation/Test';
 import ImageUpload from './pages/Curation/ImageUpload';
-function App() {
-  return (
-    <Routes>
-      <Route path="/loginstart" element={<LoginStart />} />
-      <Route path="/onboarding" element={<Onboarding />} />
-      <Route path="/" element={<Start />} />
-      <Route path="/loading" element={<Loading />} />
+import VideoComplete from './pages/VideoComplete';
 
-      {/* MainLayout 상속받는 그룹*/}
-      <Route element={<MainLayout />}>
-        <Route path="shopinfo" element={<InputShopInfo />} />
-        <Route path="imageupload" element={<ImageUpload />} />
-        <Route path="test" element={<Test />} />
-      </Route>
-    </Routes>
-  );
+function App() {
+    return (
+        <Routes>
+            <Route path="/loginstart" element={<LoginStart />} />
+            <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/" element={<Start />} />
+            <Route path="/loading" element={<Loading />} />
+
+            {/* MainLayout 상속받는 그룹*/}
+            <Route element={<MainLayout />}>
+                <Route path="/shopinfo" element={<InputShopInfo />} />
+                <Route path="/imageupload" element={<ImageUpload />} />
+                <Route path="/test" element={<Test />} />
+                <Route path="/videocomplete" element={<VideoComplete />} />
+            </Route>
+        </Routes>
+    );
 }
 
 export default App;

@@ -18,6 +18,7 @@ const HeaderWrapper = styled.header`
   padding: 1.875rem;
   box-sizing: border-box;
   position: relative;
+  border-bottom: 1px solid #EDEDED;
 `;
 const SideContainer = styled.div`
   position: absolute;
@@ -47,11 +48,8 @@ const CompleteButton = styled.button`
   border: none;
   color: var(--Maincolor-1, #ff7300);
   text-align: center;
-  font-family: Pretendard;
   font-size: 1.5rem;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 2.5rem;
+  font-family: "Pretendard-Medium";
   padding: 0;
 `;
 
@@ -59,9 +57,7 @@ const Title = styled.div`
   font-weight: 600;
   font-size: 1.5rem;
   color: var(--Gray-scale-2, #4d4d4d);
-  font-family: Pretendard;
-  font-style: normal;
-  font-weight: 600;
+  font-family: "Pretendard-SemiBold";
   line-height: 1.875rem;
 `;
 
@@ -83,7 +79,7 @@ export default function Header() {
           </Button>
         )}
         {showCloseButton && (
-          <Button onClick={() => navigate('/')}>
+          <Button onClick={() => navigate('/shopinfo')}>
             <Img src={XIcon} alt="닫기" />
           </Button>
         )}
