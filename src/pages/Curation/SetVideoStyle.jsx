@@ -4,6 +4,7 @@ import useHeaderStore from '../../stores/headerStore';
 import StepperComponent from '../../components/ProgressBar';
 import styled, { css } from 'styled-components';
 import { Button } from '../../components/Button';
+import { useNavigate } from 'react-router-dom';
 // 섹션 옵션 데이터
 const TONE_OPTIONS = ['표준어', '사투리'];
 const VOICE_OPTIONS = ['여성', '남성'];
@@ -22,6 +23,7 @@ const STYLE_OPTIONS = [
 ];
 
 const SetVideoStyle = () => {
+  const navigate = useNavigate();
   const setHeaderConfig = useHeaderStore((state) => state.setHeaderConfig);
   const resetHeaderConfig = useHeaderStore((state) => state.resetHeaderConfig);
   const activeSteps = [1, 2, 3];
@@ -148,7 +150,13 @@ const SetVideoStyle = () => {
       </SettingsForm>
 
       {/* 쇼츠 생성하기 버튼 */}
-      <Button text={'쇼츠 생성하기'} reverse={true}></Button>
+      <Button
+        text={'쇼츠 생성하기'}
+        reverse={true}
+        onClick={() => {
+          navigate('/videocomplete');
+        }}
+      ></Button>
     </PageWrapper>
   );
 };
