@@ -8,24 +8,26 @@ import MainLayout from './layout/MainLayout';
 import Test from './pages/Curation/Test';
 import ImageUpload from './pages/Curation/ImageUpload';
 import VideoComplete from './pages/VideoComplete';
+import SetVideoStyle from './pages/Curation/SetVideoStyle';
 
 function App() {
-    return (
-        <Routes>
-            <Route path="/loginstart" element={<LoginStart />} />
-            <Route path="/onboarding" element={<Onboarding />} />
-            <Route path="/" element={<Start />} />
-            <Route path="/loading" element={<Loading />} />
+  return (
+    <Routes>
+      <Route path="/" element={<Start />} />
+      <Route path="/loginstart" element={<LoginStart />} />
+      <Route path="/onboarding" element={<Onboarding />} />
+      <Route path="/loading" element={<Loading />} />
 
-            {/* MainLayout 상속받는 그룹*/}
-            <Route element={<MainLayout />}>
-                <Route path="/shopinfo" element={<InputShopInfo />} />
-                <Route path="/imageupload" element={<ImageUpload />} />
-                <Route path="/test" element={<Test />} />
-                <Route path="/videocomplete" element={<VideoComplete />} />
-            </Route>
-        </Routes>
-    );
+      {/* MainLayout 상속받는 그룹*/}
+      <Route element={<MainLayout />}>
+        <Route path="/shopinfo" element={<InputShopInfo />} />
+        <Route path="/imageupload" element={<ImageUpload />} />
+        <Route path="/setvideo" element={<SetVideoStyle />} />
+        <Route path="/videocomplete" element={<VideoComplete />} />
+        <Route path="/test" element={<Test />} />
+      </Route>
+    </Routes>
+  );
 }
 
 export default App;
