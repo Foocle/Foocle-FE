@@ -37,7 +37,7 @@ const SubtitleSection = styled.div`
 `;
 const Description = styled.div`
   font-size: 2rem;
-  font-family: Pretendard-SemiBold;
+  font-family: "Pretendard-SemiBold";
 `;
 const HighlightText = styled(Description)`
   /* Description 스타일을 상속받아 사용 */
