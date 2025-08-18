@@ -5,7 +5,6 @@ import useHeaderStore from '../../stores/headerStore';
 import StepperComponent from '../../components/ProgressBar';
 import styled, { css } from 'styled-components';
 import { Button } from '../../components/Button';
-import { useNavigate } from 'react-router-dom';
 // 섹션 옵션 데이터
 const TONE_OPTIONS = ['표준어', '사투리'];
 const VOICE_OPTIONS = ['여성', '남성'];
