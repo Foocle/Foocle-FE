@@ -12,7 +12,7 @@ const useSignup = () => {
         setError(null);
         setData(null);
         
-        const API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/users/local/signup`;
+        const API_URL = `${import.meta.env.VITE_BACKEND_BASE_URL}/api/users/local/signup`;
 
         try {
             const response = await axios.post(API_URL, userData, {

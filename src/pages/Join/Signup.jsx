@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 import React, { useState, useEffect } from "react";
 import useHeaderStore from '../../stores/headerStore';
 import styled from "styled-components"
-import axios from "axios";
+import useSignup from "../../api/signup";
 
 export default function Signup () {
     // Header 상태 관리
@@ -22,13 +22,18 @@ export default function Signup () {
         return () => resetHeaderConfig();
     }, [setHeaderConfig, resetHeaderConfig]);
     
-    // 이메일, 패스워드, 패스워드 재확인 상태 관리
+    // 이름, 이메일, 패스워드, 패스워드 재확인 상태 관리
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [name, setName] = useState("");
+    const [passwordCheck, setPasswordCheck] = useState("");
+
+    // 회원가입 api 커스텀 훅 사용
+    const { signup, isLoading, error } = useSignup();
 
     // 버튼 활성화 조건
     const isFormValid = email && password && name;
+    const isPasswordMatch = password === passwordCheck;
 
     const handleSignup = async (e) => {
         e.preventDefault();
@@ -37,6 +42,27 @@ export default function Signup () {
         if (!isFormValid) {
             alert("모든 정보를 입력해주세요.");
             return;
+        }
+
+        const userData = {
+            email: email,
+            password: password,
+            name: name,
+        };
+
+        try {
+            const response = await signup(userData);
+            console.log("회원가입 성공:", response);
+            
+            if (response.isSuccess) {
+                alert("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.");
+                navigate('/login');
+            } else {
+                alert(response.message);
+            }
+        } catch (err) {
+            const errorMessage = err.response?.data?.message || "네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+            alert(`회원가입 실패: ${errorMessage}`);
         }
     };
 
@@ -76,7 +102,7 @@ export default function Signup () {
                             autoComplete="new-password"
                         />
                     </Password>
-                    {/* <PasswordCheck>
+                    <PasswordCheck>
                         <InputTitle>비밀번호 재확인</InputTitle>
                         <input 
                             type="password"
@@ -88,10 +114,10 @@ export default function Signup () {
                         />
                         {passwordCheck && ( // passwordCheck가 입력되었을 때만 표시
                             <p style={{ color: isPasswordMatch ? 'green' : 'red', fontSize: '1.2rem', fontFamily: 'Pretendard-Medium' }}>
-                                {isPasswordMatch ? '' : '비밀번호가 일치하지 않습니다.'}
+                                {isPasswordMatch ? '비밀번호가 일치합니다.' : '비밀번호가 일치하지 않습니다.'}
                             </p>
                         )}
-                    </PasswordCheck> */}
+                    </PasswordCheck>
                 </InputWrapper>
 
                 <SignupBtn type="submit" disabled={!isFormValid}>
@@ -120,7 +146,7 @@ const InputWrapper = styled.div`
     max-width: 540px;
     display: flex;
     flex-direction: column;
-    gap: clamp(16px, 7vw, 30px);
+    gap: clamp(16px, 6vw, 30px);
 `;
 
 const Name = styled.div`
@@ -143,7 +169,7 @@ const Name = styled.div`
 `;
 const ID = styled(Name)``;
 const Password = styled(Name)``;
-// const PasswordCheck = styled(ID)``;
+const PasswordCheck = styled(ID)``;
 
 const InputTitle = styled.label`
     font-size: clamp(14px, 3.5vw, 24px);

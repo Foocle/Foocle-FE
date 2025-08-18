@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import React, { useState, useEffect } from "react";
 import useHeaderStore from '../../stores/headerStore';
 import styled from "styled-components"
-import axios from "axios";
+import useLogin from "../../api/login";
 
 export default function Login () {
     // Header 상태 관리
@@ -25,9 +25,34 @@ export default function Login () {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    // 로그인 api 커스텀 훅 사용
+    const { login, isLoading, error } = useLogin();
+
     const handleLogin = async (e) => {
         e.preventDefault();
         console.log(email, password);
+        
+        if (!email || !password) {
+            alert("이메일과 비밀번호를 모두 입력해주세요.");
+            return;
+        }
+
+        try {
+            const response = await login(email, password);
+            console.log("로그인 성공:", response);
+
+            if (response.isSuccess) {
+                localStorage.setItem("accessToken", response.result.accessToken);
+                localStorage.setItem("refreshToken", response.result.refreshToken);
+                alert("로그인에 성공했습니다.");
+                navigate("/shopinfo");
+            } else {
+                alert(response.message);
+            }
+        } catch (err) {
+            const errorMessage = err.response?.data?.message || "네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+            alert(`로그인 실패: ${errorMessage}`);
+        }
     };
 
     return (
@@ -88,7 +113,7 @@ const InputWrapper = styled.div`
     max-width: 540px;
     display: flex;
     flex-direction: column;
-    gap: clamp(16px, 7vw, 30px);
+    gap: clamp(16px, 6vw, 30px);
 `;
 
 const ID = styled.div`
