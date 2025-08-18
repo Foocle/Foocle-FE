@@ -1,2 +1,13 @@
-@import "./styles/font.css";
-@import "./styles/reset.css";
+@import './styles/font.css';
+@import './styles/reset.css';
+
+html {
+  /* rem 단위를 쉽게 계산하기 위한 설정 (1rem = 10px) */
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1.6rem; /* 16px */
+  line-height: 1.5;
+  word-break: keep-all; /* 단어 단위로 줄바꿈 */
+}
