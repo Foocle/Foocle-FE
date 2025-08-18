@@ -123,6 +123,7 @@ const Disclaimer = styled.p`
 
 const LoginStart = () => {
     const navigate = useNavigate();
+    
     return (
         <StartWrapper>
             <TitleWrapper>
@@ -138,10 +139,10 @@ const LoginStart = () => {
                     <p>카카오로 3초 만에 시작하기</p>
                 </KakaoBtn>
                 <LoginBtn>
-                    <p>이메일로 로그인하기</p>
+                    <p onClick={() => navigate('/login')}>이메일로 로그인하기</p>
                 </LoginBtn>
                 <SignupBtn>
-                    <p>회원가입하기</p>
+                    <p onClick={() => navigate('/signup')}>회원가입하기</p>
                 </SignupBtn>
                 <a onClick={() => navigate('/shopinfo')}>비회원으로 시작하기</a>
             </BtnWrapper>

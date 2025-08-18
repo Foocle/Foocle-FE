@@ -9,6 +9,8 @@ import Test from './pages/Curation/Test';
 import ImageUpload from './pages/Curation/ImageUpload';
 import VideoComplete from './pages/VideoComplete';
 import SetVideoStyle from './pages/Curation/SetVideoStyle';
+import Login from './pages/Join/Login';
+import Signup from './pages/Join/Signup';
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
         <Route path="/imageupload" element={<ImageUpload />} />
         <Route path="/setvideo" element={<SetVideoStyle />} />
         <Route path="/videocomplete" element={<VideoComplete />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/test" element={<Test />} />
       </Route>
     </Routes>

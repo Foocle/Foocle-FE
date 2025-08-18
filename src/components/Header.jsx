@@ -7,7 +7,7 @@ import useHeaderStore from '../stores/headerStore';
 import IconDone from '../assets/img/icon_done.svg';
 import XIcon from '../assets/img/icon_x.svg';
 
-const STEPS = ["/loginstart", "/shopinfo", "/imageupload", "/setvideo", "/videocomplete"];
+const STEPS = ["/loginstart", "/login", "/shopinfo", "/imageupload", "/setvideo", "/videocomplete"];
 
 export default function Header() {
   const navigate = useNavigate();
