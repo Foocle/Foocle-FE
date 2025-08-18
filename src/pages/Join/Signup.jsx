@@ -32,15 +32,15 @@ export default function Signup () {
     const { signup, isLoading, error } = useSignup();
 
     // 버튼 활성화 조건
-    const isFormValid = email && password && name;
+    const isFormValid = email && password && name && passwordCheck;
     const isPasswordMatch = password === passwordCheck;
 
     const handleSignup = async (e) => {
         e.preventDefault();
         console.log(email, password, name);
 
-        if (!isFormValid) {
-            alert("모든 정보를 입력해주세요.");
+        if (!isPasswordMatch) {
+            alert("비밀번호가 일치하지 않습니다.");
             return;
         }
 
