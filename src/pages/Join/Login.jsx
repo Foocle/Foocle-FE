@@ -28,43 +28,6 @@ export default function Login () {
     const handleLogin = async (e) => {
         e.preventDefault();
         console.log(email, password);
-
-        const API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/users/local/login`;
-        const data = {
-            email: email,
-            password: password,
-        };
-
-        try {
-            const response = await axios.post(API_URL, data, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            console.log("로그인 성공:", response.data);
-
-            if (response.data.isSuccess) {
-            // 성공 시 로직
-            localStorage.setItem("accessToken", response.data.result.accessToken);
-            localStorage.setItem("refreshToken", response.data.data.result.refreshToken);
-            navigate("/main"); // 로그인 성공 후 이동할 경로 (예: 메인 페이지)
-            } else {
-                // 서버에서 실패를 알림
-                console.error("로그인 실패:", response.data.message);
-                alert(response.data.message);
-            }
-        } catch (error) {
-            if (error.response) {
-                // 서버가 4xx 또는 5xx 상태 코드로 응답한 경우
-                const errorMessage = error.response.data.message || "로그인에 실패했습니다. 다시 시도해주세요.";
-                console.error("로그인 실패:", errorMessage);
-                alert(`로그인 실패: ${errorMessage}`);
-            } else {
-                // 네트워크 오류 등 기타 오류
-                console.error("네트워크 오류:", error.message);
-                alert("네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
-            }
-        }
     };
 
     return (
