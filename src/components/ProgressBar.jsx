@@ -46,7 +46,7 @@ const Step = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 0.8rem;
-  color: ${(props) => (props.active ? '#FF7300' : '#cccccc')};
+  color: ${(props) => (props.active ? '#FF7300' : '#FFBF8A8C')};
   text-align: center;
   font-family: 'Pretendard-SemiBold';
 `;
@@ -60,7 +60,7 @@ const StepNumber = styled.div`
   border-radius: 50%;
   color: white;
   font-size: 1.3rem;
-  background-color: ${(props) => (props.active ? '#FF7300' : '#cccccc')};
+  background-color: ${(props) => (props.active ? '#FF7300' : '#FFBF8A8C')};
   transition: background-color 0.3s ease;
   font-family: 'Pretendard-Bold';
 `;
@@ -73,7 +73,7 @@ const StepLabel = styled.span`
 const StepSeparator = styled.span`
   flex-grow: 1;
   text-align: center;
-  color: ${(props) => (props.active ? '#FF7300' : '#cccccc')};
+  color: #FF9B4A;
   transition: color 0.3s ease;
   font-family: 'Pretendard-SemiBold';
   font-size: 1.8rem;
