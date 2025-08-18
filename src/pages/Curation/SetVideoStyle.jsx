@@ -97,7 +97,7 @@ const SetVideoStyle = () => {
         {/* 계절감 섹션 */}
         <SectionWrapper>
           <SectionTitle>계절감</SectionTitle>
-          <OptionsGrid columns={4}>
+          <OptionsGrid columns={2}>
             {' '}
             {SEASON_OPTIONS.map((option) => (
               <OptionButton key={option} selected={season === option} onClick={() => setSeason(option)}>

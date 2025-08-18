@@ -9,6 +9,7 @@ import InstructionCard from '../../components/InstructionCard';
 import { useNavigate } from 'react-router-dom';
 import StepperComponent from '../../components/ProgressBar';
 import CurationData from './CurationData';
+import CreateStore from '../../api/store';
 const InputShopInfo = () => {
   // Header 상태 관리
   const navigate = useNavigate();
@@ -31,17 +32,33 @@ const InputShopInfo = () => {
   const [shopName, setShopName] = useState('');
   const [location, setLocation] = useState('');
   const [hours, setHours] = useState({ start: '', end: '' });
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
-  const handleNextClick = () => {
-    console.log({
-      shopName,
-      location,
-      hours,
-      selectedCategory,
-    });
-    alert('콘솔에 정보 찍고 다음 페이지로 넘어갑니다');
-    navigate('/imageupload');
+  // 카테고리 클릭 핸들러
+  const handleCategoryClick = (id) => {
+    if (selectedCategories.includes(id)) {
+      setSelectedCategories(selectedCategories.filter((cid) => cid !== id));
+    } else {
+      setSelectedCategories([...selectedCategories, id]);
+    }
+  };
+
+  const handleNextClick = async () => {
+    const payload = {
+      name: shopName,
+      address: location,
+      openTime: hours.start,
+      closeTime: hours.end,
+      categoryIds: selectedCategories,
+    };
+    try {
+      const result = await CreateStore(payload);
+      console.log('등록 성공:', result);
+      navigate('/imageupload');
+    } catch (err) {
+      alert(`등록 실패: ${err.message}`);
+    }
   };
 
   return (
@@ -94,14 +111,14 @@ const InputShopInfo = () => {
         <FormSection>
           <Label>카테고리</Label>
           <CategoryGrid>
-            {CurationData.map((CurationData) => (
+            {CurationData.map((item) => (
               <CategoryItem
-                key={CurationData.name}
-                onClick={() => setSelectedCategory(CurationData.name)}
-                selected={selectedCategory === CurationData.name}
+                key={item.id}
+                onClick={() => handleCategoryClick(item.id)}
+                selected={selectedCategories.includes(item.id)}
               >
-                <CategoryImage src={CurationData.img} alt={CurationData.name} />
-                <CategoryName>{CurationData.name}</CategoryName>
+                <CategoryImage src={item.img} alt={item.name} />
+                <CategoryName>{item.name}</CategoryName>
               </CategoryItem>
             ))}
           </CategoryGrid>
@@ -243,7 +260,7 @@ const CategoryItem = styled.div`
 const CategoryImage = styled.img`
   width: clamp(5rem, 14vw, 6.5rem);
   height: clamp(5rem, 14vw, 6.5rem);
-  border-radius: 1.2rem;
+  border-radius: 50%;
   background-color: #f0f0f0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   margin-bottom: 0.8rem;

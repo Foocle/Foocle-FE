@@ -18,28 +18,27 @@ import burger from '../../assets/img/category/category_burger.svg';
 import mexican from '../../assets/img/category/category_mexican.svg';
 import dosirak from '../../assets/img/category/category_dosirak.svg';
 import porridge from '../../assets/img/category/category_porridge.svg';
-
 const CurationData = [
-  { name: '한식', img: hansik },
-  { name: '피자', img: pizza },
-  { name: '돈까스', img: donkatsu },
-  { name: '일식', img: japanese },
-  { name: '분식', img: bunsik },
-  { name: '치킨', img: chicken },
-  { name: '족발/보쌈', img: jokbal },
-  { name: '찜/탕', img: jjim },
-  { name: '구이', img: gui },
-  { name: '중식', img: chinese },
-  { name: '회/해물', img: seafood },
-  { name: '양식', img: western },
-  { name: '커피/차', img: coffee },
-  { name: '디저트', img: dessert },
-  { name: '아시안', img: asian },
-  { name: '샐러드', img: salad },
-  { name: '버거', img: burger },
-  { name: '멕시칸', img: mexican },
-  { name: '도시락', img: dosirak },
-  { name: '죽', img: porridge },
+  { id: 1, name: '한식', img: hansik },
+  { id: 2, name: '피자', img: pizza },
+  { id: 3, name: '돈까스', img: donkatsu },
+  { id: 4, name: '일식', img: japanese },
+  { id: 5, name: '분식', img: bunsik },
+  { id: 6, name: '치킨', img: chicken },
+  { id: 7, name: '족발/보쌈', img: jokbal },
+  { id: 8, name: '찜/탕', img: jjim },
+  { id: 9, name: '구이', img: gui },
+  { id: 10, name: '중식', img: chinese },
+  { id: 11, name: '회/해물', img: seafood },
+  { id: 12, name: '양식', img: western },
+  { id: 13, name: '커피/차', img: coffee },
+  { id: 14, name: '디저트', img: dessert },
+  { id: 15, name: '아시안', img: asian },
+  { id: 16, name: '샐러드', img: salad },
+  { id: 17, name: '버거', img: burger },
+  { id: 18, name: '멕시칸', img: mexican },
+  { id: 19, name: '도시락', img: dosirak },
+  { id: 20, name: '죽', img: porridge },
 ];
 
 export default CurationData;
