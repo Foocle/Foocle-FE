@@ -2,25 +2,41 @@
 // Join/Login, Join/Signup, Curation/... 구현에 사용
 import React from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import useHeaderStore from '../stores/headerStore';
 import IconDone from '../assets/img/icon_done.svg';
 import XIcon from '../assets/img/icon_x.svg';
 
+const STEPS = ["/loginstart", "/shopinfo", "/imageupload", "/setvideo", "/videocomplete"];
+
 export default function Header() {
   const navigate = useNavigate();
+  const { pathname, state } = useLocation();
   const { showBackButton, showCloseButton, title, showCompleteButton, onComplete } = useHeaderStore();
+
+  const goBackByStep = () => {
+    // 1) 명시적 출처 우선
+    if (state && typeof state === "object" && state.from) {
+      navigate(String(state.from), { replace: true });
+      return;
+    }
+    // 2) 스텝 테이블 기준
+    const i = STEPS.indexOf(pathname);
+    const prev = i > 0 ? STEPS[i - 1] : STEPS[0];
+    navigate(prev, { replace: true });
+  };
+
 
   return (
     <HeaderWrapper>
       <SideContainer className="left">
         {showBackButton && (
-          <Button onClick={() => navigate(-1)}>
+          <Button onClick={goBackByStep}>
             <Img src={IconDone} alt="뒤로 가기" />
           </Button>
         )}
         {showCloseButton && (
-          <Button onClick={() => navigate('/shopinfo')}>
+          <Button onClick={() => navigate('/setvideo')}>
             <Img src={XIcon} alt="닫기" />
           </Button>
         )}
@@ -29,7 +45,7 @@ export default function Header() {
       <Title>{title}</Title>
 
       <SideContainer className="right">
-        {showCompleteButton && <CompleteButton onClick={onComplete}>완료</CompleteButton>}
+        {showCompleteButton && <CompleteButton onClick={() => navigate('/')}>완료</CompleteButton>}
       </SideContainer>
     </HeaderWrapper>
   );
@@ -85,6 +101,7 @@ const CompleteButton = styled.button`
   font-family: 'Pretendard-Medium';
   padding: 0;
   font-size: clamp(1.5rem, 4vw, 1.7rem);
+  cursor: pointer;
 `;
 
 const Title = styled.div`

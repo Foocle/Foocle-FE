@@ -42,7 +42,7 @@ const SetVideoStyle = () => {
       showBackButton: true,
       showCloseButton: false,
       title: '영상스타일 설정',
-      showCompleteButton: true,
+      showCompleteButton: false,
     });
     return () => resetHeaderConfig();
   }, [setHeaderConfig, resetHeaderConfig]);

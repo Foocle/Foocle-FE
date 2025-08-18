@@ -243,7 +243,7 @@ const CategoryItem = styled.div`
 const CategoryImage = styled.img`
   width: clamp(5rem, 14vw, 6.5rem);
   height: clamp(5rem, 14vw, 6.5rem);
-  border-radius: 50%;
+  border-radius: 1.2rem;
   background-color: #f0f0f0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   margin-bottom: 0.8rem;
