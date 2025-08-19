@@ -136,7 +136,10 @@ const LoginStart = () => {
             <BtnWrapper>
                 <KakaoBtn>
                     <img src={KakaoLogo} alt="카카오 로그인 로고" />
-                    <p>카카오로 3초 만에 시작하기</p>
+                    <p onClick={(e) => {
+                        e.preventDefault();
+                        alert("카카오 로그인은 구현되지 않았습니다.")
+                    }}>카카오로 3초 만에 시작하기</p>
                 </KakaoBtn>
                 <LoginBtn>
                     <p onClick={() => navigate('/login')}>이메일로 로그인하기</p>
