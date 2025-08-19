@@ -12,7 +12,7 @@ import SetVideoStyle from './pages/Curation/SetVideoStyle';
 import Login from './pages/Join/Login';
 import Signup from './pages/Join/Signup';
 import Mypage from './pages/Mypage';
-
+import StoreDetailPage from './pages/StoreDetailPage';
 function App() {
   return (
     <Routes>
@@ -31,6 +31,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/mypage" element={<Mypage />} />
         <Route path="/test" element={<Test />} />
+        <Route path="/store/:storeId" element={<StoreDetailPage />} />
       </Route>
     </Routes>
   );

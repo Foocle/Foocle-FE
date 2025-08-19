@@ -27,7 +27,13 @@ const useLogin = () => {
       });
       setData(response.data);
       //추가
-      const { accessToken } = response.data.result;
+      const { accessToken, email, name } = response.data.result;
+
+      useAuthStore.getState().setAuth({
+        token: accessToken,
+        email,
+        name,
+      });
       useAuthStore.getState().setToken(accessToken);
 
       return response.data;
