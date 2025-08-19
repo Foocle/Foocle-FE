@@ -86,10 +86,17 @@ const ImageUpload = () => {
 
     try {
       console.log(`${uploadTasks.length}개의 이미지 업로드를 시작합니다.`);
-      await Promise.all(uploadTasks);
+      const uploadResults = await Promise.all(uploadTasks);
+
+      // 성공 응답에서 필요한 데이터(UUID와 설명) 추출
+      const uploadedData = uploadResults.map(result => ({
+        id: result.result.id,
+        uuid: result.result.imageUuid, // UUID 추출
+        description: result.result.description, // description 추출
+      }));
 
       alert('모든 이미지가 성공적으로 업로드되었습니다.');
-      navigate(`/setvideo/${storeId}`);
+      navigate(`/setvideo/${storeId}`, { state: { uploadedData } });
     } catch (error) {
       console.error('이미지 업로드 중 오류 발생:', error);
       alert('이미지 업로드 중 오류가 발생했습니다. 다시 시도해주세요.');

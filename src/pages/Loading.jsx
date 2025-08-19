@@ -1,9 +1,9 @@
 // 쇼츠 생성 로딩중 페이지
 import { useState, useEffect } from "react";
 import { PacmanLoader } from "react-spinners";
-import { useNavigate } from "react-router-dom";
-// import { FadeLoader } from "react-spinners";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
+import { getShortsStatus } from "../api/createshortform.js";
 
 const LoadingWrapper = styled.div`
     width: 100%;
@@ -42,6 +42,8 @@ const Loadingtext = styled.div`
 const Loading = () => {
     const [dots, setDots] = useState("");
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const shortsUuid = searchParams.get('shortsUuid'); // URL에서 shortsUuid 가져오기
 
     // 점(...) 애니메이션
     useEffect(() => {
@@ -53,11 +55,56 @@ const Loading = () => {
 
     //5초 뒤 쇼츠 완성 페이지로 자동 이동
     useEffect(() => {
-        const timer = setTimeout(() => {
-            navigate("/videocomplete");
-        }, 5000);
-        return () => clearTimeout(timer);
-    }, [navigate]);
+        // shortsUuid가 없으면 로직을 중단
+        if (!shortsUuid) {
+            console.error("shortsUuid가 URL에 없습니다.");
+            alert("영상 정보를 찾을 수 없습니다. 다시 시도해 주세요.");
+            navigate(-1); // 이전 페이지로 돌아가기
+            return;
+        }
+
+        const pollStatus = async () => {
+            try {
+                const response = await getShortsStatus(shortsUuid);
+                const status = response.result.status;
+                
+                console.log(`폴링 상태: ${status}`);
+
+                if (status === 'DONE') { // 생성이 완료된 경우
+                    const videoUrl = response.result.url;
+                    const promotionText = response.result.promotionText;
+                    
+                    // 영상 URL과 텍스트를 state에 담아 다음 페이지로 이동
+                    navigate("/videocomplete", {
+                        state: {
+                            videoUrl,
+                            promotionText,
+                        },
+                        replace: true, // 이전 페이지 히스토리를 대체하여 뒤로가기 방지
+                    });
+                    return; // 함수 실행 중단
+                }
+
+                if (status === 'FAILED') { // 생성이 실패한 경우
+                    alert('영상 생성에 실패했습니다. 다시 시도해 주세요.');
+                    navigate("/setvideo"); 
+                    return; 
+                }
+                
+                // 상태가 DONE 또는 FAILED가 아니면 2초 후에 다시 폴링
+                setTimeout(pollStatus, 2000); 
+                
+            } catch (error) {
+                console.error("폴링 중 오류 발생:", error);
+                alert('영상 상태를 확인하는 중 오류가 발생했습니다.');
+                navigate("/setvideo");
+            }
+        };
+
+        // 컴포넌트 마운트 시 폴링 시작
+        pollStatus();
+
+    }, [navigate, shortsUuid]);
 
     return (
         <LoadingWrapper>
