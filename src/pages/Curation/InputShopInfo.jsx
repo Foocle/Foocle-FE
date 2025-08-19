@@ -53,9 +53,16 @@ const InputShopInfo = () => {
       categoryIds: selectedCategories,
     };
     try {
-      const result = await CreateStore(payload);
-      console.log('등록 성공:', result);
-      navigate('/imageupload');
+      const res = await CreateStore(payload);
+      const storeId = res.result.storeId;
+
+      if (!storeId) {
+        alert('가게 ID를 받아오지 못했습니다.');
+        console.log(storeId);
+        return;
+      }
+      console.log('등록 성공:', res);
+      navigate(`/imageupload/${storeId}`);
     } catch (err) {
       alert(`등록 실패: ${err.message}`);
     }

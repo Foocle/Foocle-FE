@@ -29,12 +29,12 @@ const SetVideoStyle = () => {
   const activeSteps = [1, 2, 3];
 
   // 선택 항목
-  const [snsType, setSnsType] = useState('instagram');
-  const [tone, setTone] = useState('표준어');
-  const [voice, setVoice] = useState('여성');
-  const [season, setSeason] = useState('봄');
-  const [targets, setTargets] = useState(['청소년', '시니어']);
-  const [styles, setStyles] = useState(['#친근한', '#편안한', '#트렌디·힙한']);
+  const [snsType, setSnsType] = useState('');
+  const [tone, setTone] = useState('');
+  const [voice, setVoice] = useState('');
+  const [season, setSeason] = useState('');
+  const [targets, setTargets] = useState(['', '']);
+  const [styles, setStyles] = useState(['', '', '']);
 
   // 헤더 설정
   useEffect(() => {
