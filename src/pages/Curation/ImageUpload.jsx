@@ -17,12 +17,12 @@ import IconCooking from '../../assets/img/icon_cooking.svg';
 import IconFood from '../../assets/img/icon_food.svg';
 import UploadImage from '../../api/image';
 import LoadingOverlay from '../../components/LoadingOverlay';
-// 각 섹션의 제목을 정의
+
 const SECTIONS = {
   storeExterior: { title: '1. 가게 외관', icon: IconShopOut, type: 'EXTERIOR' },
   storeInterior: { title: '2. 가게 내부', icon: IconShopIn, type: 'INTERIOR' },
   cookingProcess: { title: '3. 요리하는 모습', icon: IconCooking, type: 'KITCHEN' },
-  foodPhotos: { title: '4. 음식 사진', icon: IconFood, type: 'FOOD' },
+  foodPhotos: { title: '4. 결과물 (음식 사진)', icon: IconFood, type: 'FOOD' },
 };
 
 const ImageUpload = () => {
@@ -33,6 +33,7 @@ const ImageUpload = () => {
   const { storeId } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     setHeaderConfig({ showBackButton: true, title: '이미지 업로드' });
     return () => resetHeaderConfig();
@@ -45,7 +46,6 @@ const ImageUpload = () => {
     foodPhotos: [{ id: Date.now() + 3 }],
   });
 
-  //  API 호출 없이 상태만 업데이트
   const handleUpdateCard = (sectionKey, cardId, data) => {
     setCards((prev) => ({
       ...prev,
@@ -53,21 +53,17 @@ const ImageUpload = () => {
     }));
   };
 
-  // 모든 API 호출을 담당
   const handleNextClick = async () => {
-    // 유효성 검사 (섹션 이미지 갯수 확인)
     const allSectionsHaveImages = Object.keys(SECTIONS).every((key) => cards[key].some((card) => card.imageFile));
 
     if (!allSectionsHaveImages) {
       alert('각 섹션에 최소 하나 이상의 이미지를 업로드해야 합니다.');
       return;
     }
-    setIsLoading(true);
-    // 1. 업로드해야 할 모든 이미지 작업을 배열에 담기
+
     const uploadTasks = [];
     Object.entries(cards).forEach(([sectionKey, cardArray]) => {
       cardArray.forEach((card) => {
-        // 이미지 파일이 있는 카드만 대상
         if (card.imageFile) {
           uploadTasks.push(
             UploadImage({
@@ -81,15 +77,20 @@ const ImageUpload = () => {
       });
     });
 
+    if (uploadTasks.length > 5) {
+      alert('6장 이상은 비용문제로 일시 제한합니다. 최대 5장으로 요청해주세요.');
+      return;
+    }
+
+    setIsLoading(true);
+
     try {
-      // 2. 이미지 동시에 업로드
       console.log(`${uploadTasks.length}개의 이미지 업로드를 시작합니다.`);
       await Promise.all(uploadTasks);
 
       alert('모든 이미지가 성공적으로 업로드되었습니다.');
       navigate(`/setvideo/${storeId}`);
     } catch (error) {
-      // 3. 실패
       console.error('이미지 업로드 중 오류 발생:', error);
       alert('이미지 업로드 중 오류가 발생했습니다. 다시 시도해주세요.');
     } finally {
@@ -98,6 +99,12 @@ const ImageUpload = () => {
   };
 
   const handleAddCard = (sectionKey) => {
+    const totalCards = Object.values(cards).flat().length;
+    if (totalCards >= 10) {
+      alert('최대 10장까지만 추가할 수 있습니다.');
+      return;
+    }
+
     setCards((prevCards) => ({
       ...prevCards,
       [sectionKey]: [...prevCards[sectionKey], { id: Date.now() }],
@@ -105,7 +112,6 @@ const ImageUpload = () => {
   };
 
   const handleDeleteCard = (sectionKey, cardId) => {
-    // 삭제 유효성 검사
     if (cards[sectionKey].length <= 1) {
       alert('더 이상 삭제할 수 없습니다.');
       return;
@@ -119,7 +125,7 @@ const ImageUpload = () => {
   return (
     <PageWrapper>
       <StepperComponent activeSteps={activeSteps} />
-      <InstructionCard text={'음식 사진은 최소 4장이 필요해요! 음식 사진은 필수'} />
+      <InstructionCard text={'각 섹션별로 최소 1장의 사진을 필수로 등록해주세요!'} />
       <ButtonWrapper>
         <GuideButton onClick={() => setIsModalOpen(true)}>
           <img src={IconImg} />
@@ -128,17 +134,36 @@ const ImageUpload = () => {
       </ButtonWrapper>
       {Object.entries(SECTIONS).map(([key, sectionData]) => (
         <SectionContainer key={key}>
-          {cards[key].map((card, index) => (
+          <SectionTitle>{sectionData.title}</SectionTitle>
+          {key === 'foodPhotos' && (
+            <DescriptionGuide>
+              <GuideHeader>
+                <GuideTitle>음식 설명 가이드</GuideTitle>
+                <RequiredBadge>가격은 필수로 적어주세요!</RequiredBadge>
+              </GuideHeader>
+              <GuideContent>
+                <div>감각적 표현 - 색감·질감·향·맛</div>
+                <div>차별화 포인트 - 특별한 재료·전통·조리법·미디어·충성도</div>
+                <div>감정적 어필 - 향수·즐거움·건강·편의성·프리미엄</div>
+                <div>상황별 - 아침·저녁·야식·날씨·기념일</div>
+              </GuideContent>
+            </DescriptionGuide>
+          )}
+          {cards[key].map((card) => (
             <ImageUploaderCard
               key={card.id}
-              title={index === 0 ? sectionData.title : ''}
               icon={sectionData.icon}
               cardData={card}
+              placeholder={
+                key === 'foodPhotos'
+                  ? '12,000원에 신선한 재료로 만든 가성비 탕수육을 점심, 저녁 메뉴로 먹을 수 있습니다.'
+                  : '위 사진에 대한 설명을 적어주세요.'
+              }
               onUpdate={(data) => handleUpdateCard(key, card.id, data)}
               onDelete={() => handleDeleteCard(key, card.id)}
             />
           ))}
-          <Button icon={IconPlus} text={'추가하기'} onClick={() => handleAddCard(key)}></Button>
+          <Button icon={IconPlus} text={'추가하기'} onClick={() => handleAddCard(key)} />
         </SectionContainer>
       ))}
       <Button text={'다음'} reverse={true} onClick={handleNextClick}></Button>
@@ -183,7 +208,6 @@ const GuideButton = styled.button`
   font-family: 'Pretendard-SemiBold';
   cursor: pointer;
   transition: background-color 0.2s;
-
   font-size: clamp(1.2rem, 3.2vw, 1.4rem);
 
   & > img {
@@ -202,10 +226,61 @@ const SectionContainer = styled.div`
   flex-direction: column;
   gap: 1.6rem;
   margin-bottom: 1.6rem;
-  /* 768px 이상 태블릿 화면에서는 그리드 레이아웃으로 변경 */
+
   @media (min-width: 768px) {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2.4rem;
+  }
+`;
+
+const SectionTitle = styled.h3`
+  font-family: 'Pretendard-Bold';
+  font-size: clamp(1.8rem, 5vw, 2.2rem);
+  color: #333;
+  margin-bottom: -0.8rem;
+  grid-column: 1 / -1;
+`;
+
+const DescriptionGuide = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: #f8f9fa;
+  padding: 1.6rem;
+  border-radius: 1rem;
+  border: 1px solid #e9ecef;
+  grid-column: 1 / -1;
+`;
+
+const GuideHeader = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+`;
+
+const GuideTitle = styled.span`
+  font-family: 'Pretendard-Bold';
+  font-size: clamp(1.2rem, 3.9vw, 1.4rem);
+  color: #212529;
+`;
+
+const RequiredBadge = styled.span`
+  background-color: #868686;
+  color: #fff;
+  font-family: 'Pretendard-Bold';
+  padding: 0.4rem 0.8rem;
+  border-radius: 2rem;
+  font-size: clamp(0.85rem, 3vw, 0.9rem);
+`;
+
+const GuideContent = styled.div`
+  color: #495057;
+  font-size: clamp(1rem, 3.7vw, 1.2rem);
+  line-height: 1.7;
+
+  & > div {
+    margin-bottom: 0.2rem;
   }
 `;
