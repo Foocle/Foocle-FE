@@ -271,7 +271,7 @@ const VideoComplete = () => {
             showBackButton: false,
             showCloseButton: true,
             title: "쇼츠 생성 완료",
-            showCompleteButton: true,
+            showCompleteButton: false,
         });
         return () => resetHeaderConfig();
     }, [setHeaderConfig, resetHeaderConfig]);
