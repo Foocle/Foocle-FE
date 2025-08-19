@@ -1,10 +1,13 @@
 // 영상 스타일 설정 페이지
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useHeaderStore from '../../stores/headerStore';
 import StepperComponent from '../../components/ProgressBar';
 import styled, { css } from 'styled-components';
 import { Button } from '../../components/Button';
+import { createShortsFromStored } from '../../api/createshortform.js';
+import { getStoreDetails } from '../../api/mypage';
+
 // 섹션 옵션 데이터
 const TONE_OPTIONS = ['표준어', '사투리'];
 const VOICE_OPTIONS = ['여성', '남성'];
@@ -24,8 +27,8 @@ const STYLE_OPTIONS = [
 
 const SetVideoStyle = () => {
   const navigate = useNavigate();
-  const setHeaderConfig = useHeaderStore((state) => state.setHeaderConfig);
-  const resetHeaderConfig = useHeaderStore((state) => state.resetHeaderConfig);
+  const { storeId } = useParams();
+  const { setHeaderConfig, resetHeaderConfig } = useHeaderStore();
   const activeSteps = [1, 2, 3];
 
   // 선택 항목
@@ -33,21 +36,40 @@ const SetVideoStyle = () => {
   const [tone, setTone] = useState('');
   const [voice, setVoice] = useState('');
   const [season, setSeason] = useState('');
-  const [targets, setTargets] = useState(['', '']);
-  const [styles, setStyles] = useState(['', '', '']);
+  // ✨ 초기 상태를 빈 배열로 수정
+  const [targets, setTargets] = useState([]);
+  const [styles, setStyles] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [imageIds, setImageIds] = useState([]);
 
   // 헤더 설정
   useEffect(() => {
     setHeaderConfig({
       showBackButton: true,
-      showCloseButton: false,
       title: '영상스타일 설정',
-      showCompleteButton: false,
     });
     return () => resetHeaderConfig();
   }, [setHeaderConfig, resetHeaderConfig]);
 
-  // 다중 선택 항목
+  // 페이지 로드 시 가게 상세 정보를 불러와 이미지 ID 추출
+  useEffect(() => {
+    const fetchImageIds = async () => {
+      if (!storeId) return;
+      try {
+        const data = await getStoreDetails(storeId);
+        if (data.isSuccess && data.result.images) {
+          const ids = data.result.images.map((image) => image.id);
+          setImageIds(ids);
+        }
+      } catch (error) {
+        console.error('이미지 ID를 가져오는 데 실패했습니다.', error);
+        alert('이미지 정보를 불러오는 데 실패했습니다.');
+      }
+    };
+    fetchImageIds();
+  }, [storeId]);
+
+  // 다중 선택 항목 핸들러
   const handleMultiSelect = (item, selectedItems, setSelectedItems) => {
     const newSelection = selectedItems.includes(item)
       ? selectedItems.filter((i) => i !== item)
@@ -55,15 +77,62 @@ const SetVideoStyle = () => {
     setSelectedItems(newSelection);
   };
 
+  // API 호출을 처리하는 함수
+  const handleCreateShorts = async () => {
+    // 유효성 검사
+    if (!snsType || !tone || !voice || !season || targets.length === 0 || styles.length === 0) {
+      alert('모든 스타일 옵션을 선택해주세요.');
+      return;
+    }
+    if (imageIds.length === 0) {
+      alert('업로드된 이미지가 없어 숏폼을 생성할 수 없습니다.');
+      return;
+    }
+
+    const payload = {
+      storeId: storeId,
+      imageIds: imageIds,
+      options: {
+        snsType: snsType,
+        tone: tone,
+        ttsGender: voice === '여성' ? 'FEMALE' : 'MALE',
+        season: season,
+        targets: targets,
+        styles: styles,
+      },
+    };
+
+    setLoading(true);
+    try {
+      const result = await createShortsFromStored(payload.storeId, payload.imageIds, payload.options.ttsGender);
+
+      if (result.isSuccess) {
+        console.log(result);
+        console.log('숏폼 생성 요청 성공! 숏폼 UUID:', result.result.shortsUuid);
+        navigate(`/loading?shortsUuid=${result.result.shortsUuid}&storeId=${storeId}`);
+      } else {
+        alert('숏폼 생성에 실패했습니다. 다시 시도해주세요.');
+        console.error('API 응답 실패:', result.message);
+      }
+    } catch (error) {
+      alert('서버와의 통신 중 오류가 발생했습니다.');
+      console.error('숏폼 생성 오류:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <PageWrapper>
       <StepperComponent activeSteps={activeSteps} />
-
       <SettingsForm>
         {/* SNS 종류 섹션 */}
         <SectionWrapper>
           <SectionTitle>SNS 종류</SectionTitle>
           <StyledSelect value={snsType} onChange={(e) => setSnsType(e.target.value)}>
+            <option value="" disabled>
+              선택해주세요
+            </option>
             <option value="instagram">인스타그램</option>
             <option value="kakao">카카오톡</option>
             <option value="naver">네이버 블로그</option>
@@ -98,7 +167,6 @@ const SetVideoStyle = () => {
         <SectionWrapper>
           <SectionTitle>계절감</SectionTitle>
           <OptionsGrid columns={2}>
-            {' '}
             {SEASON_OPTIONS.map((option) => (
               <OptionButton key={option} selected={season === option} onClick={() => setSeason(option)}>
                 {option}
@@ -133,8 +201,6 @@ const SetVideoStyle = () => {
             <MultiSelectTag>복수선택 가능</MultiSelectTag>
           </SectionTitle>
           <OptionsGrid isTagStyle={true}>
-            {' '}
-            {/* isTagStyle prop으로 스타일 분기 */}
             {STYLE_OPTIONS.map((option) => (
               <OptionButton
                 key={option}
@@ -149,8 +215,12 @@ const SetVideoStyle = () => {
         </SectionWrapper>
       </SettingsForm>
 
-      {/* 쇼츠 생성하기 버튼 */}
-      <Button text={'쇼츠 생성하기'} onClick={() => navigate('/loading')} reverse={true}></Button>
+      <Button
+        text={loading ? '생성 중...' : '쇼츠 생성하기'}
+        onClick={handleCreateShorts}
+        reverse={true}
+        disabled={loading}
+      ></Button>
     </PageWrapper>
   );
 };
@@ -205,12 +275,10 @@ const StyledSelect = styled.select`
   transition: all 0.2s ease-in-out;
   font-size: clamp(1.5rem, 4vw, 1.6rem);
 
-  /* 기본 화살표 숨기기 */
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
 
-  /* 커스텀 화살표 아이콘 */
   background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 6L8 10L12 6' stroke='%23888888' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 1.6rem center;
@@ -218,11 +286,9 @@ const StyledSelect = styled.select`
 
 const OptionsGrid = styled.div`
   display: grid;
-  /* isTagStyle이 아닐 때만 columns prop 사용 */
   grid-template-columns: repeat(${(props) => (props.isTagStyle ? '1' : props.columns || '2')}, 1fr);
   gap: 1.2rem;
 
-  /* isTagStyle일 때 태그 레이아웃 적용 */
   ${(props) =>
     props.isTagStyle &&
     css`
@@ -241,7 +307,6 @@ const OptionButton = styled.button`
   background-color: #f8f8f8;
   border: 1px solid #eaeaea;
   color: #4d4d4d;
-  font-family: 'Pretendard', sans-serif;
   font-size: clamp(1.5rem, 4vw, 1.6rem);
 
   ${(props) =>
@@ -249,6 +314,7 @@ const OptionButton = styled.button`
     css`
       background-color: rgba(255, 191, 138, 0.55);
       color: #ff7300;
+      border-color: rgba(255, 115, 0, 0.2);
     `}
 
   ${(props) =>
@@ -259,13 +325,14 @@ const OptionButton = styled.button`
       padding: 0.8rem 1.6rem;
       font-size: clamp(1.3rem, 3.5vw, 1.4rem);
       background-color: #f5f5f5;
-      color: #d0d0d0;
+      color: #888;
+      border: 1px solid #eee;
 
-      /* 태그 선택 시 스타일 */
       ${props.selected &&
       css`
         background-color: #ffe8d9;
         color: #ff7300;
+        border-color: transparent;
       `}
     `}
 `;
