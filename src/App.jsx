@@ -11,6 +11,7 @@ import VideoComplete from './pages/VideoComplete';
 import SetVideoStyle from './pages/Curation/SetVideoStyle';
 import Login from './pages/Join/Login';
 import Signup from './pages/Join/Signup';
+import Mypage from './pages/Mypage';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/videocomplete" element={<VideoComplete />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/mypage" element={<Mypage />} />
         <Route path="/test" element={<Test />} />
       </Route>
     </Routes>
