@@ -32,24 +32,24 @@ const Stage = styled.div`
 const Video = styled.video`
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  /* ✨ contain을 cover로 변경하여 여백 없이 화면을 가득 채웁니다. */
+  object-fit: cover;
   background: black;
 `;
 
 const CloseBtn = styled.button`
   position: absolute;
-  /* left: 0;
-    top: 16.92px; */
   left: clamp(0px, 0vw, 16px);
   top: calc(clamp(6px, 2vh, 16px));
   z-index: 1;
   border: none;
   cursor: pointer;
   background: none;
-  padding: 0;
+  padding: 1rem; // 버튼 클릭 영역 확보
+
   img {
-    width: clamp(18px, 15vw, 60px);
-    height: clamp(18px, 15vw, 60px);
+    width: clamp(18px, 15vw, 24px); // 아이콘 크기 조절
+    height: clamp(18px, 15vw, 24px);
   }
 `;
 
@@ -76,7 +76,7 @@ export default function VideoOverlay({ open, src, onClose, maxWidth = 600 }) {
     <Overlay $max={maxWidth} onClick={onClose}>
       <Stage onClick={(e) => e.stopPropagation()}>
         <CloseBtn onClick={onClose}>
-          <img src={IconBack} />
+          <img src={IconBack} alt="뒤로가기" />
         </CloseBtn>
         <Video src={src} autoPlay controls playsInline />
       </Stage>

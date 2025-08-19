@@ -21,7 +21,7 @@ export const createShortsFromStored = async (storeId, imageIds, ttsGender) => {
 
   try {
     const { token } = useAuthStore.getState();
-
+    console.log(data);
     const response = await apiClient.post(`/api/v1/stores/${storeId}/shorts:from-stored-ids`, data, {
       headers: {
         'Content-Type': 'application/json',
@@ -34,8 +34,6 @@ export const createShortsFromStored = async (storeId, imageIds, ttsGender) => {
     throw error;
   }
 };
-
-
 
 /**
  * 숏츠 생성 상태를 조회하는 API 함수입니다.
