@@ -1,10 +1,12 @@
 // 영상 스타일 설정 페이지
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import useHeaderStore from '../../stores/headerStore';
 import StepperComponent from '../../components/ProgressBar';
 import styled, { css } from 'styled-components';
 import { Button } from '../../components/Button';
+import { createShortsFromStored } from '../../api/createshortform.js';
+
 // 섹션 옵션 데이터
 const TONE_OPTIONS = ['표준어', '사투리'];
 const VOICE_OPTIONS = ['여성', '남성'];
@@ -24,6 +26,9 @@ const STYLE_OPTIONS = [
 
 const SetVideoStyle = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { storeId } = useParams();
+  const { uploadedData } = location.state || { uploadedData: [] };
   const setHeaderConfig = useHeaderStore((state) => state.setHeaderConfig);
   const resetHeaderConfig = useHeaderStore((state) => state.resetHeaderConfig);
   const activeSteps = [1, 2, 3];
@@ -35,6 +40,7 @@ const SetVideoStyle = () => {
   const [season, setSeason] = useState('');
   const [targets, setTargets] = useState(['', '']);
   const [styles, setStyles] = useState(['', '', '']);
+  const [loading, setLoading] = useState(false); // API 호출 로딩 상태
 
   // 헤더 설정
   useEffect(() => {
@@ -53,6 +59,36 @@ const SetVideoStyle = () => {
       ? selectedItems.filter((i) => i !== item)
       : [...selectedItems, item];
     setSelectedItems(newSelection);
+  };
+
+  // API 호출을 처리하는 함수
+  const handleCreateShorts = async () => {
+    setLoading(true); // 로딩 상태 시작
+  
+    const imageIds = uploadedData.map(item => item.id);
+    const ttsGender = voice === '여성' ? 'FEMALE' : 'MALE';
+
+    try {
+      const result = await createShortsFromStored(
+        storeId, 
+        imageIds,
+        ttsGender
+      );
+
+      if (result.isSuccess) {
+        console.log("숏폼 생성 요청 성공! 숏폼 UUID:", result.result.shortsUuid);
+        // 다음 페이지로 이동하면서 UUID 전달
+        navigate(`/loading?shortsUuid=${result.result.shortsUuid}`); 
+      } else {
+        alert('숏폼 생성에 실패했습니다. 다시 시도해주세요.');
+        console.error("API 응답 실패:", result.message);
+      }
+    } catch (error) {
+      alert('서버와의 통신 중 오류가 발생했습니다.');
+      console.error("숏폼 생성 오류:", error);
+    } finally {
+      setLoading(false); // 로딩 상태 종료
+    }
   };
 
   return (
@@ -150,7 +186,12 @@ const SetVideoStyle = () => {
       </SettingsForm>
 
       {/* 쇼츠 생성하기 버튼 */}
-      <Button text={'쇼츠 생성하기'} onClick={() => navigate('/loading')} reverse={true}></Button>
+      <Button 
+        text={'쇼츠 생성하기'} 
+        onClick={handleCreateShorts} 
+        reverse={true}
+      >
+      </Button>
     </PageWrapper>
   );
 };
