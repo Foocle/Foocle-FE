@@ -8,6 +8,7 @@ import useAuthStore from '../stores/authStore';
 import Logout from '../api/logout';
 import IconDone from '../assets/img/icon_done.svg';
 import XIcon from '../assets/img/icon_x.svg';
+import IconMypage from '../assets/img/icon_mypage.svg';
 
 const STEPS = ["/loginstart", "/login", "/shopinfo", "/imageupload", "/setvideo", "/videocomplete"];
 
@@ -16,43 +17,30 @@ export default function Header() {
   const { pathname, state } = useLocation();
   const { showBackButton, showCloseButton, title, showCompleteButton, onComplete } = useHeaderStore();
 
-  // Zustand 스토어에서 로그인 상태 가져오기
-  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
-
-  // 로그인/로그아웃 버튼을 표시하지 않을 경로 목록
-  const noAuthButtonPaths = ['/login', '/signup'];
-  const shouldShowAuthButton = !noAuthButtonPaths.includes(pathname);
+  const { isLoggedIn, clearToken } = useAuthStore();
 
   const goBackByStep = () => {
-    // 1) 명시적 출처 우선
     if (state && typeof state === "object" && state.from) {
       navigate(String(state.from), { replace: true });
       return;
     }
-    // 2) 스텝 테이블 기준
     const i = STEPS.indexOf(pathname);
     const prev = i > 0 ? STEPS[i - 1] : STEPS[0];
     navigate(prev, { replace: true });
   };
 
-  // 로그인/로그아웃 버튼 클릭 핸들러
-  const handleAuthButtonClick = async () => {
-    if (isLoggedIn) {
-      // 로그인 상태: 로그아웃 처리
-      const confirmed = window.confirm("정말 로그아웃 하시겠습니까?");
-      if (confirmed) {
-        try {
-          await Logout();
-          window.alert("로그아웃 되었습니다.");
-          navigate('/login');
-        } catch (error) {
-          console.error("로그아웃 실패:", error);
-          window.alert("로그아웃 중 오류가 발생했습니다. 다시 시도해 주세요.");
-        }
+  const handleLogout = async () => {
+    const confirmed = window.confirm("정말 로그아웃 하시겠습니까?");
+    if (confirmed) {
+      try {
+        await Logout();
+        clearToken();
+        window.alert("로그아웃 되었습니다.");
+        navigate('/login');
+      } catch (error) {
+        console.error("로그아웃 실패:", error);
+        window.alert("로그아웃 중 오류가 발생했습니다. 다시 시도해 주세요.");
       }
-    } else {
-      // 비로그인 상태: 로그인 페이지로 이동
-      navigate('/login');
     }
   };
 
@@ -74,11 +62,16 @@ export default function Header() {
       <Title>{title}</Title>
 
       <SideContainer className="right">
-        {showCompleteButton && <CompleteButton onClick={() => navigate('/')}>완료</CompleteButton>}
-        {shouldShowAuthButton && (
-          <LoginoutButton onClick={handleAuthButtonClick}>
-            {isLoggedIn ? '로그아웃' : '로그인'}
-          </LoginoutButton>
+        {isLoggedIn && (
+          // 현재 경로가 마이페이지일 경우 로그아웃 버튼 표시
+          pathname === '/mypage' ? (
+            <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+          ) : (
+            // 마이페이지가 아닐 경우 마이페이지 아이콘 표시
+            <Button onClick={() => navigate('/mypage')}>
+              <Img src={IconMypage} alt="마이페이지" />
+            </Button>
+          )
         )}
       </SideContainer>
     </HeaderWrapper>
@@ -130,18 +123,7 @@ const Button = styled.button`
   padding: 0;
 `;
 
-const CompleteButton = styled.button`
-  display: inline-block;
-  background-color: transparent;
-  border: none;
-  color: var(--Maincolor-1, #ff7300);
-  font-family: 'Pretendard-Medium';
-  padding: 0;
-  font-size: clamp(1.5rem, 4vw, 1.7rem);
-  cursor: pointer;
-`;
-
-const LoginoutButton = styled.button`
+const LogoutButton = styled.button`
   display: inline-block;
   background-color: var(--MainColor-1, #FF7300);
   color: #FFFFFF;
