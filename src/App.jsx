@@ -23,8 +23,8 @@ function App() {
       {/* MainLayout 상속받는 그룹*/}
       <Route element={<MainLayout />}>
         <Route path="/shopinfo" element={<InputShopInfo />} />
-        <Route path="/imageupload" element={<ImageUpload />} />
-        <Route path="/setvideo" element={<SetVideoStyle />} />
+        <Route path="/imageupload/:storeId" element={<ImageUpload />} />
+        <Route path="/setvideo/:storeId" element={<SetVideoStyle />} />
         <Route path="/videocomplete" element={<VideoComplete />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

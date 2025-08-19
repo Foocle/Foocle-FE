@@ -9,37 +9,35 @@ import IconPlus from '../../assets/img/icon_plus.svg';
 import InstructionCard from '../../components/InstructionCard';
 import ImageGuideModal from '../../components/ImageGuideModal';
 import IconImg from '../../assets/img/icon_image.svg';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '../../components/Button';
 import IconShopOut from '../../assets/img/icon_shop_out.svg';
 import IconShopIn from '../../assets/img/icon_shop_in.svg';
 import IconCooking from '../../assets/img/icon_cooking.svg';
 import IconFood from '../../assets/img/icon_food.svg';
+import UploadImage from '../../api/image';
+import LoadingOverlay from '../../components/LoadingOverlay';
 // 각 섹션의 제목을 정의
 const SECTIONS = {
-  storeExterior: { title: '1. 가게 외관', icon: IconShopOut },
-  storeInterior: { title: '2. 가게 내부', icon: IconShopIn },
-  cookingProcess: { title: '3. 요리하는 모습', icon: IconCooking },
-  foodPhotos: { title: '4. 음식 사진', icon: IconFood },
+  storeExterior: { title: '1. 가게 외관', icon: IconShopOut, type: 'EXTERIOR' },
+  storeInterior: { title: '2. 가게 내부', icon: IconShopIn, type: 'INTERIOR' },
+  cookingProcess: { title: '3. 요리하는 모습', icon: IconCooking, type: 'KITCHEN' },
+  foodPhotos: { title: '4. 음식 사진', icon: IconFood, type: 'FOOD' },
 };
+
 const ImageUpload = () => {
   const setHeaderConfig = useHeaderStore((state) => state.setHeaderConfig);
   const resetHeaderConfig = useHeaderStore((state) => state.resetHeaderConfig);
   const activeSteps = [1, 2];
   const navigate = useNavigate();
-
+  const { storeId } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    setHeaderConfig({
-      showBackButton: true,
-      showCloseButton: false,
-      title: '이미지 업로드',
-      showCompleteButton: false,
-    });
+    setHeaderConfig({ showBackButton: true, title: '이미지 업로드' });
     return () => resetHeaderConfig();
   }, [setHeaderConfig, resetHeaderConfig]);
 
-  // 모든 이미지 카드 데이터를 통합 관리하는 state
   const [cards, setCards] = useState({
     storeExterior: [{ id: Date.now() }],
     storeInterior: [{ id: Date.now() + 1 }],
@@ -47,42 +45,81 @@ const ImageUpload = () => {
     foodPhotos: [{ id: Date.now() + 3 }],
   });
 
-  //마지막 다음 버튼
-  const handleNextClick = () => {
-    console.log('요소 확인하는거 나중에 추가 예정');
-    alert('다음 페이지로 넘어갑니다');
-    navigate('/setvideo');
+  //  API 호출 없이 상태만 업데이트
+  const handleUpdateCard = (sectionKey, cardId, data) => {
+    setCards((prev) => ({
+      ...prev,
+      [sectionKey]: prev[sectionKey].map((card) => (card.id === cardId ? { ...card, ...data } : card)),
+    }));
   };
-  // 특정 섹션에 카드를 추가하는 함수
+
+  // 모든 API 호출을 담당
+  const handleNextClick = async () => {
+    // 유효성 검사 (섹션 이미지 갯수 확인)
+    const allSectionsHaveImages = Object.keys(SECTIONS).every((key) => cards[key].some((card) => card.imageFile));
+
+    if (!allSectionsHaveImages) {
+      alert('각 섹션에 최소 하나 이상의 이미지를 업로드해야 합니다.');
+      return;
+    }
+    setIsLoading(true);
+    // 1. 업로드해야 할 모든 이미지 작업을 배열에 담기
+    const uploadTasks = [];
+    Object.entries(cards).forEach(([sectionKey, cardArray]) => {
+      cardArray.forEach((card) => {
+        // 이미지 파일이 있는 카드만 대상
+        if (card.imageFile) {
+          uploadTasks.push(
+            UploadImage({
+              storeId,
+              imageFile: card.imageFile,
+              type: SECTIONS[sectionKey].type,
+              description: card.description,
+            })
+          );
+        }
+      });
+    });
+
+    try {
+      // 2. 이미지 동시에 업로드
+      console.log(`${uploadTasks.length}개의 이미지 업로드를 시작합니다.`);
+      await Promise.all(uploadTasks);
+
+      alert('모든 이미지가 성공적으로 업로드되었습니다.');
+      navigate(`/setvideo/${storeId}`);
+    } catch (error) {
+      // 3. 실패
+      console.error('이미지 업로드 중 오류 발생:', error);
+      alert('이미지 업로드 중 오류가 발생했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleAddCard = (sectionKey) => {
     setCards((prevCards) => ({
       ...prevCards,
       [sectionKey]: [...prevCards[sectionKey], { id: Date.now() }],
     }));
   };
-  // 특정 카드를 삭제하는 함수
+
   const handleDeleteCard = (sectionKey, cardId) => {
+    // 삭제 유효성 검사
+    if (cards[sectionKey].length <= 1) {
+      alert('더 이상 삭제할 수 없습니다.');
+      return;
+    }
     setCards((prevCards) => ({
       ...prevCards,
       [sectionKey]: prevCards[sectionKey].filter((card) => card.id !== cardId),
     }));
   };
-  // 카드 내의 데이터(이미지, 설명)가 변경될 때 호출되는 함수
-  const handleUpdateCard = (sectionKey, cardId, data) => {
-    setCards((prevCards) => ({
-      ...prevCards,
-      [sectionKey]: prevCards[sectionKey].map((card) => (card.id === cardId ? { ...card, ...data } : card)),
-    }));
-  };
 
-  // 백엔드에 데이터를 전송하는 함수
-  const handleSubmit = () => {
-    console.log('전송할 데이터:', cards);
-  };
   return (
     <PageWrapper>
       <StepperComponent activeSteps={activeSteps} />
-      <InstructionCard text={'음식 사진은 최소 5장이 필요해요! 음식 사진은 필수'} />
+      <InstructionCard text={'음식 사진은 최소 4장이 필요해요! 음식 사진은 필수'} />
       <ButtonWrapper>
         <GuideButton onClick={() => setIsModalOpen(true)}>
           <img src={IconImg} />
@@ -106,9 +143,11 @@ const ImageUpload = () => {
       ))}
       <Button text={'다음'} reverse={true} onClick={handleNextClick}></Button>
       <ImageGuideModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <LoadingOverlay isLoading={isLoading} />
     </PageWrapper>
   );
 };
+
 export default ImageUpload;
 
 // --- Styled Components ---
@@ -119,6 +158,7 @@ const PageWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 1.6rem;
+  position: relative;
 `;
 
 const ButtonWrapper = styled.div`
