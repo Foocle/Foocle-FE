@@ -8,9 +8,9 @@ import useAuthStore from '../stores/authStore';
 import Logout from '../api/logout';
 import IconDone from '../assets/img/icon_done.svg';
 import XIcon from '../assets/img/icon_x.svg';
-import IconMypage from '../assets/img/icon_mypage.svg';
+import IconMypage from '../assets/img/icon_mypagepage.svg';
 
-const STEPS = ["/loginstart", "/login", "/shopinfo", "/imageupload", "/setvideo", "/videocomplete"];
+const STEPS = ['/loginstart', '/login', '/shopinfo', '/imageupload', '/setvideo', '/videocomplete'];
 
 export default function Header() {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ export default function Header() {
   const { isLoggedIn, clearToken } = useAuthStore();
 
   const goBackByStep = () => {
-    if (state && typeof state === "object" && state.from) {
+    if (state && typeof state === 'object' && state.from) {
       navigate(String(state.from), { replace: true });
       return;
     }
@@ -30,16 +30,16 @@ export default function Header() {
   };
 
   const handleLogout = async () => {
-    const confirmed = window.confirm("정말 로그아웃 하시겠습니까?");
+    const confirmed = window.confirm('정말 로그아웃 하시겠습니까?');
     if (confirmed) {
       try {
         await Logout();
         clearToken();
-        window.alert("로그아웃 되었습니다.");
+        window.alert('로그아웃 되었습니다.');
         navigate('/login');
       } catch (error) {
-        console.error("로그아웃 실패:", error);
-        window.alert("로그아웃 중 오류가 발생했습니다. 다시 시도해 주세요.");
+        console.error('로그아웃 실패:', error);
+        window.alert('로그아웃 중 오류가 발생했습니다. 다시 시도해 주세요.');
       }
     }
   };
@@ -62,17 +62,16 @@ export default function Header() {
       <Title>{title}</Title>
 
       <SideContainer className="right">
-        {isLoggedIn && (
+        {isLoggedIn &&
           // 현재 경로가 마이페이지일 경우 로그아웃 버튼 표시
-          pathname === '/mypage' ? (
+          (pathname === '/mypage' ? (
             <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
           ) : (
             // 마이페이지가 아닐 경우 마이페이지 아이콘 표시
             <Button onClick={() => navigate('/mypage')}>
               <Img src={IconMypage} alt="마이페이지" />
             </Button>
-          )
-        )}
+          ))}
       </SideContainer>
     </HeaderWrapper>
   );
@@ -125,8 +124,8 @@ const Button = styled.button`
 
 const LogoutButton = styled.button`
   display: inline-block;
-  background-color: var(--MainColor-1, #FF7300);
-  color: #FFFFFF;
+  background-color: var(--MainColor-1, #ff7300);
+  color: #ffffff;
   border: none;
   border-radius: 10px;
   font-family: 'Pretendard-SemiBold';
