@@ -22,7 +22,7 @@ function App() {
       <Route path="/loginstart" element={<LoginStart />} />
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/loading" element={<Loading />} />
-      <Route path="/KakaoLoginCallback" element={<KakaoLoginCallback />} />
+      <Route path="/kakao/callback" element={<KakaoLoginCallback />} />
 
       {/* MainLayout 상속받는 그룹*/}
       <Route element={<MainLayout />}>

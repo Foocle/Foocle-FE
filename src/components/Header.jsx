@@ -9,7 +9,15 @@ import XIcon from '../assets/img/icon_x.svg';
 import IconMypage from '../assets/img/icon_mypagepage.svg';
 
 // 동적 라우트 반영
-const STEPS = ['/loginstart', '/login', '/shopinfo', '/imageupload/:storeId', '/setvideo/:storeId', '/videocomplete'];
+const STEPS = [
+  '/loginstart',
+  '/login',
+  '/shopinfo',
+  '/imageupload/:storeId',
+  '/setvideo/:storeId',
+  '/videocomplete',
+  '/mypage',
+];
 
 export default function Header() {
   const navigate = useNavigate();
