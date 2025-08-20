@@ -5,6 +5,30 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { getShortsStatus } from '../api/createshortform.js';
 
+const NotificationBox = styled.div`
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 400px;
+  padding: clamp(12px, 3vw, 16px);
+  background-color: #f0f4ff;
+  border: 1px solid #dbe1f2;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  text-align: center;
+
+  p {
+    margin: 0;
+    font-size: clamp(13px, 3.5vw, 15px);
+    font-family: 'Pretendard-Medium';
+    line-height: 1.5;
+    color: #4a5568;
+    word-break: keep-all;
+  }
+`;
+
 const LoadingWrapper = styled.div`
   width: 100%;
   max-width: 600px;
@@ -16,6 +40,7 @@ const LoadingWrapper = styled.div`
   box-sizing: border-box;
   overflow: hidden;
   padding: 0 !important;
+  position: relative;
 `;
 const Loadingtext = styled.div`
   width: 100%;
@@ -110,6 +135,13 @@ const Loading = () => {
 
   return (
     <LoadingWrapper>
+      <NotificationBox>
+        <p>
+          쇼츠 생성 중 5분정도 시간이 걸릴 수 있습니다.
+          <br />
+          가급적 새로고침을 피해주세요.
+        </p>
+      </NotificationBox>
       <PacmanLoader color="#A5A5A5" />
       <Loadingtext>
         <p>쇼츠 생성하는 중</p>

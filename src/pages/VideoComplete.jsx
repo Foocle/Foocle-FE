@@ -37,26 +37,26 @@ const TitleSection = styled.div`
   background-clip: padding-box, border-box;
 `;
 // 추천 제목
-const AItitle = styled.label`
-  white-space: nowrap;
-  font-size: clamp(14px, 4.5vw, 18px);
-  font-family: 'Pretendard-Semibold';
-  color: #4d4d4d;
-`;
-const TitleInput = styled.input`
-  min-width: 0; /* 길 때 수평 스크롤/깨짐 방지 */
-  height: 100%;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: clamp(14px, 4.5vw, 18px);
-  font-family: 'Pretendard-Regular';
-  color: #868686;
+// const AItitle = styled.label`
+//   white-space: nowrap;
+//   font-size: clamp(14px, 4.5vw, 18px);
+//   font-family: 'Pretendard-Semibold';
+//   color: #4d4d4d;
+// `;
+// const TitleInput = styled.input`
+//   min-width: 0; /* 길 때 수평 스크롤/깨짐 방지 */
+//   height: 100%;
+//   border: none;
+//   outline: none;
+//   background: transparent;
+//   font-size: clamp(14px, 4.5vw, 18px);
+//   font-family: 'Pretendard-Regular';
+//   color: #868686;
 
-  &::placeholder {
-    color: #868686;
-  }
-`;
+//   &::placeholder {
+//     color: #868686;
+//   }
+// `;
 
 //영상 썸네일
 const ThumbSection = styled.div`
@@ -85,7 +85,7 @@ const ThumbVideo = styled.video`
 const AlertBubble = styled.div`
   display: flex;
   align-items: center;
-  width: clamp(220px, 65vw, 280px);
+  width: clamp(210px, 61vw, 250px);
   height: clamp(26px, 4vh, 32px);
   position: absolute;
   top: 0;
@@ -149,7 +149,7 @@ const Labal = styled.span`
   font-size: clamp(18px, 6vw, 24px);
   font-family: 'Pretendard-SemiBold';
   color: #464a4d;
-  margin-top: clamp(20px, 4vh, 30px);
+  margin-top: clamp(10px, 2vh, 15px);
 `;
 const TextArea = styled(TextareaAutosize)`
   width: 100%;
@@ -333,7 +333,6 @@ const VideoComplete = () => {
   const [title, setTitle] = useState(suggestedTitle);
   const TITLE_MAX = 30;
 
-  // ✨ script 상태의 초기값을 promotionText로 설정합니다.
   const [script, setScript] = useState(promotionText);
   const SCRIPT_MAX = 500;
 
@@ -349,7 +348,9 @@ const VideoComplete = () => {
   //TODO : 선택 가능하도록?
   const [tags, setTags] = useState(incomingTags);
   const [selected, setSelected] = useState(() => new Set());
-
+  const handleNavigateToMyPage = () => {
+    navigate('/mypage');
+  };
   const toggleTags = (t) => {
     setSelected((prev) => {
       const next = new Set(prev);
@@ -361,7 +362,7 @@ const VideoComplete = () => {
 
   return (
     <PageWrapper>
-      <TitleSection>
+      {/* <TitleSection>
         <AItitle>추천제목</AItitle>
         <TitleInput
           type="text"
@@ -370,12 +371,13 @@ const VideoComplete = () => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
-      </TitleSection>
+      </TitleSection> */}
+      <Labal>미리보기</Labal>
 
       <ThumbSection>
         <ThumbCard>
-          <AlertBubble>
-            <p>마이 페이지에 들어가 생성된 영상 확인하세요!</p>
+          <AlertBubble onClick={handleNavigateToMyPage}>
+            <p>여기를 눌러 생성된 영상을 확인하세요!</p>
           </AlertBubble>
           <ThumbVideo
             src={videoUrl}
@@ -384,7 +386,7 @@ const VideoComplete = () => {
             loop
             playsInline
             controls={false}
-            onClick={() => setIsVideoOpen(true)}
+            onClick={handleNavigateToMyPage}
           />
           {/* <ShareButton onClick={openSheet}>
             <Dot />
