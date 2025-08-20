@@ -7,7 +7,7 @@ const ImageUploaderCard = ({ icon, cardData, onUpdate, onDelete, placeholder }) 
   const fileInputRef = useRef(null);
   const textareaRef = useRef(null);
   const { preview, description = '' } = cardData || {};
-
+  const isInvalid = preview && (!description || description.trim() === '');
   useLayoutEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
@@ -54,7 +54,7 @@ const ImageUploaderCard = ({ icon, cardData, onUpdate, onDelete, placeholder }) 
         <HiddenInput type="file" accept="image/*" ref={fileInputRef} onChange={handleImageChange} />
       </UploadArea>
 
-      <DescriptionInputWrapper>
+      <DescriptionInputWrapper isInvalid={isInvalid}>
         <DescriptionInput
           ref={textareaRef}
           as="textarea"
@@ -135,14 +135,14 @@ const DescriptionInputWrapper = styled.div`
   height: auto;
   background-color: #fff;
   border-radius: 1rem;
-  border: 1px solid #e0e0e0;
+  border: 1px solid ${(props) => (props.isInvalid ? '#e53e3e' : '#e0e0e0')};
   box-sizing: border-box;
   transition: all 0.2s ease-in-out;
   padding: 1.5rem 1.2rem;
 
   &:focus-within {
-    border-color: #ff7300;
-    box-shadow: 0 0 0 2px rgba(255, 115, 0, 0.2);
+    border-color: ${(props) => (props.isInvalid ? '#e53e3e' : '#ff7300')};
+    box-shadow: 0 0 0 2px ${(props) => (props.isInvalid ? 'rgba(229, 62, 62, 0.2)' : 'rgba(255, 115, 0, 0.2)')};
   }
 `;
 

@@ -3,12 +3,11 @@ import { useState, useEffect } from 'react';
 import useHeaderStore from '../stores/headerStore';
 import styled from 'styled-components';
 import TextareaAutosize from 'react-textarea-autosize';
-import ExVideo from '../assets/video/EXvideo.mp4';
 import Blog from '../assets/img/blog.svg';
 import URL from '../assets/img/URL.svg';
 import Instagram from '../assets/img/Instagram.svg';
 import Kakao from '../assets/img/Vector.svg';
-import VideoOverlay from '../components/VideoModal.jsx';
+// import VideoOverlay from '../components/VideoModal.jsx';
 
 //styled
 const CONTENT_MAX = 600;
@@ -86,7 +85,7 @@ const ThumbVideo = styled.video`
 const AlertBubble = styled.div`
   display: flex;
   align-items: center;
-  width: clamp(180px, 60vw, 243px);
+  width: clamp(220px, 65vw, 280px);
   height: clamp(26px, 4vh, 32px);
   position: absolute;
   top: 0;
@@ -376,7 +375,7 @@ const VideoComplete = () => {
       <ThumbSection>
         <ThumbCard>
           <AlertBubble>
-            <p>해당 버튼을 눌러서 SNS에 공유해보세요</p>
+            <p>마이 페이지에 들어가 생성된 영상 확인하세요!</p>
           </AlertBubble>
           <ThumbVideo
             src={videoUrl}
@@ -387,11 +386,11 @@ const VideoComplete = () => {
             controls={false}
             onClick={() => setIsVideoOpen(true)}
           />
-          <ShareButton onClick={openSheet}>
+          {/* <ShareButton onClick={openSheet}>
             <Dot />
             <Dot />
             <Dot />
-          </ShareButton>
+          </ShareButton> */}
         </ThumbCard>
       </ThumbSection>
 
@@ -428,7 +427,7 @@ const VideoComplete = () => {
         </ShareText>
       </ShareSheetWrapper>
 
-      <VideoOverlay open={isVideoOpen} src={videoUrl} onClose={() => setIsVideoOpen(false)} maxWidth={CONTENT_MAX} />
+      {/* <VideoOverlay open={isVideoOpen} src={videoUrl} onClose={() => setIsVideoOpen(false)} maxWidth={CONTENT_MAX} /> */}
     </PageWrapper>
   );
 };

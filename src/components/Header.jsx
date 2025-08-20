@@ -1,8 +1,6 @@
-// 헤더 바 (뒤로가기 버튼 + 페이지 제목) 담당
-// Join/Login, Join/Signup, Curation/... 구현에 사용
 import React from 'react';
 import styled from 'styled-components';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import useHeaderStore from '../stores/headerStore';
 import useAuthStore from '../stores/authStore';
 import Logout from '../api/logout';
@@ -10,23 +8,44 @@ import IconDone from '../assets/img/icon_done.svg';
 import XIcon from '../assets/img/icon_x.svg';
 import IconMypage from '../assets/img/icon_mypagepage.svg';
 
-const STEPS = ['/loginstart', '/login', '/shopinfo', '/imageupload', '/setvideo', '/videocomplete'];
+// 동적 라우트 반영
+const STEPS = ['/loginstart', '/login', '/shopinfo', '/imageupload/:storeId', '/setvideo/:storeId', '/videocomplete'];
 
 export default function Header() {
   const navigate = useNavigate();
   const { pathname, state } = useLocation();
-  const { showBackButton, showCloseButton, title, showCompleteButton, onComplete } = useHeaderStore();
+  const { storeId } = useParams(); // 현재 경로에서 storeId 추출
+  const { showBackButton, showCloseButton, title } = useHeaderStore();
 
   const { isLoggedIn, clearToken } = useAuthStore();
 
   const goBackByStep = () => {
+    // state.from 우선 적용
     if (state && typeof state === 'object' && state.from) {
       navigate(String(state.from), { replace: true });
       return;
     }
-    const i = STEPS.indexOf(pathname);
-    const prev = i > 0 ? STEPS[i - 1] : STEPS[0];
-    navigate(prev, { replace: true });
+
+    // 현재 경로가 STEPS 중 어디에 해당하는지 찾기
+    const i = STEPS.findIndex((step) => {
+      // /imageupload/:storeId 같은 경우는 prefix 매칭
+      if (step.includes(':storeId')) {
+        return pathname.startsWith(step.split('/:')[0]);
+      }
+      return pathname === step;
+    });
+
+    if (i > 0) {
+      let prev = STEPS[i - 1];
+      // prev 경로에 :storeId 있으면 치환
+      if (prev.includes(':storeId') && storeId) {
+        prev = prev.replace(':storeId', storeId);
+      }
+      navigate(prev, { replace: true });
+    } else {
+      // fallback: 첫 스텝으로
+      navigate(STEPS[0], { replace: true });
+    }
   };
 
   const handleLogout = async () => {
@@ -53,7 +72,7 @@ export default function Header() {
           </Button>
         )}
         {showCloseButton && (
-          <Button onClick={() => navigate('/setvideo')}>
+          <Button onClick={() => navigate(`/setvideo/${storeId || ''}`)}>
             <Img src={XIcon} alt="닫기" />
           </Button>
         )}
@@ -63,11 +82,9 @@ export default function Header() {
 
       <SideContainer className="right">
         {isLoggedIn &&
-          // 현재 경로가 마이페이지일 경우 로그아웃 버튼 표시
           (pathname === '/mypage' ? (
             <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
           ) : (
-            // 마이페이지가 아닐 경우 마이페이지 아이콘 표시
             <Button onClick={() => navigate('/mypage')}>
               <Img src={IconMypage} alt="마이페이지" />
             </Button>
@@ -77,8 +94,7 @@ export default function Header() {
   );
 }
 
-// --- Styled Components ---
-
+// --- Styled Components (기존 코드 그대로) ---
 const HeaderWrapper = styled.header`
   position: fixed;
   top: 0;
@@ -101,14 +117,13 @@ const SideContainer = styled.div`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-
   &.left {
     left: 1.6rem;
   }
   &.right {
     right: 1.6rem;
     display: flex;
-    gap: 1rem; // 완료 버튼과 로그인/로그아웃 버튼 사이 간격 추가
+    gap: 1rem;
     align-items: center;
   }
 `;
@@ -132,7 +147,6 @@ const LogoutButton = styled.button`
   font-size: clamp(10px, 3.5vw, 14px);
   padding: 0.8rem 1.6rem;
   cursor: pointer;
-  /* white-space: nowrap; */
 `;
 
 const Title = styled.div`

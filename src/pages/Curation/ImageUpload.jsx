@@ -1,6 +1,6 @@
 // 이미지(가게 외관, 가게 내부, 요리 등) 업로드 페이지
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react'; // useMemo 추가
 import styled from 'styled-components';
 import useHeaderStore from '../../stores/headerStore';
 import StepperComponent from '../../components/ProgressBar';
@@ -46,6 +46,24 @@ const ImageUpload = () => {
     foodPhotos: [{ id: Date.now() + 3 }],
   });
 
+  const isFormValid = useMemo(() => {
+    // 조건 1: 모든 섹션에 이미지가 최소 1개 이상 있는지 확인
+    const allSectionsHaveImages = Object.keys(SECTIONS).every((key) => cards[key].some((card) => card.imageFile));
+
+    if (!allSectionsHaveImages) return false;
+
+    // 조건 2: 업로드될 모든 이미지에 설명이 있는지 확인
+    const imagesToUpload = Object.values(cards)
+      .flat()
+      .filter((card) => card.imageFile);
+    const allDescriptionsArePresent = imagesToUpload.every(
+      (card) => card.description && card.description.trim() !== ''
+    );
+
+    // 두 조건을 모두 만족해야 유효함
+    return allDescriptionsArePresent;
+  }, [cards]); // cards 상태가 바뀔 때만 재계산됩니다.
+
   const handleUpdateCard = (sectionKey, cardId, data) => {
     setCards((prev) => ({
       ...prev,
@@ -53,14 +71,8 @@ const ImageUpload = () => {
     }));
   };
 
+  // ✨ 1. '다음' 버튼이 비활성화될 때 실행되지 않으므로 내부의 유효성 검사 로직 제거
   const handleNextClick = async () => {
-    const allSectionsHaveImages = Object.keys(SECTIONS).every((key) => cards[key].some((card) => card.imageFile));
-
-    if (!allSectionsHaveImages) {
-      alert('각 섹션에 최소 하나 이상의 이미지를 업로드해야 합니다.');
-      return;
-    }
-
     const uploadTasks = [];
     Object.entries(cards).forEach(([sectionKey, cardArray]) => {
       cardArray.forEach((card) => {
@@ -89,7 +101,7 @@ const ImageUpload = () => {
       const uploadResults = await Promise.all(uploadTasks);
 
       // 성공 응답에서 필요한 데이터(UUID와 설명) 추출
-      const uploadedData = uploadResults.map(result => ({
+      const uploadedData = uploadResults.map((result) => ({
         id: result.result.id,
         uuid: result.result.imageUuid, // UUID 추출
         description: result.result.description, // description 추출
@@ -132,10 +144,10 @@ const ImageUpload = () => {
   return (
     <PageWrapper>
       <StepperComponent activeSteps={activeSteps} />
-      <InstructionCard text={'각 섹션별로 최소 1장의 사진을 필수로 등록해주세요!'} />
+      <InstructionCard text={'각 섹션별로 최소 1장의 사진, 설명을 필수로 등록해주세요!'} />
       <ButtonWrapper>
         <GuideButton onClick={() => setIsModalOpen(true)}>
-          <img src={IconImg} />
+          <img src={IconImg} alt="사진 가이드 아이콘" />
           사진 가이드 예시
         </GuideButton>
       </ButtonWrapper>
@@ -173,7 +185,10 @@ const ImageUpload = () => {
           <Button icon={IconPlus} text={'추가하기'} onClick={() => handleAddCard(key)} />
         </SectionContainer>
       ))}
-      <Button text={'다음'} reverse={true} onClick={handleNextClick}></Button>
+
+      {/* 2. '다음' 버튼에 isFormValid와 연결된 disabled 속성 추가 */}
+      <Button text={'다음'} reverse={true} onClick={handleNextClick} disabled={!isFormValid} />
+
       <ImageGuideModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       <LoadingOverlay isLoading={isLoading} />
     </PageWrapper>
