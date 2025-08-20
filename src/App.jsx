@@ -13,6 +13,8 @@ import Login from './pages/Join/Login';
 import Signup from './pages/Join/Signup';
 import Mypage from './pages/Mypage';
 import StoreDetailPage from './pages/StoreDetailPage';
+import KakaoLoginCallback from './api/KakaoLoginCallback';
+
 function App() {
   return (
     <Routes>
@@ -20,6 +22,7 @@ function App() {
       <Route path="/loginstart" element={<LoginStart />} />
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/loading" element={<Loading />} />
+      <Route path="/KakaoLoginCallback" element={<KakaoLoginCallback />} />
 
       {/* MainLayout 상속받는 그룹*/}
       <Route element={<MainLayout />}>

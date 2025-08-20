@@ -123,6 +123,15 @@ const Disclaimer = styled.p`
 
 const LoginStart = () => {
     const navigate = useNavigate();
+    // 1. 버튼 눌러 카카오 로그인 화면 띄우기
+    const REST_API_KEY = import.meta.env.VITE_KAKAO_API_KEY;
+    const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI_KAKAO;
+    // 카카오에서 제공하는 로그인 화면 링크
+    const KAKAO_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code`;
+
+    const KakaoLogin = () => {
+        window.location.href = KAKAO_URL;
+    }; console.log(KAKAO_URL);
     
     return (
         <StartWrapper>
@@ -136,10 +145,8 @@ const LoginStart = () => {
             <BtnWrapper>
                 <KakaoBtn>
                     <img src={KakaoLogo} alt="카카오 로그인 로고" />
-                    <p onClick={(e) => {
-                        e.preventDefault();
-                        alert("카카오 로그인은 구현되지 않았습니다.")
-                    }}>카카오로 3초 만에 시작하기</p>
+                    <p onClick={KakaoLogin}
+                    >카카오로 3초 만에 시작하기</p>
                 </KakaoBtn>
                 <LoginBtn>
                     <p onClick={() => navigate('/login')}>이메일로 로그인하기</p>
