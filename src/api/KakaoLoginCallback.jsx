@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import useAuthStore from '../stores/authStore';
 
 const KakaoLoginCallback = () => {
   const navigate = useNavigate();
+  const setAuth = useAuthStore((state) => state.setAuth);
   const code = new URLSearchParams(window.location.search).get('code');
-  const VITE_BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -19,16 +20,14 @@ const KakaoLoginCallback = () => {
         }
         localStorage.setItem('usedKakaoCode', code);
 
-        const response = await axios.get(`${VITE_BACKEND_BASE_URL}/kakao/callback`, { params: { code } });
-
-        const { accessToken, id, name } = response.data.result;
-
-        localStorage.setItem('userId', id);
-        localStorage.setItem('userName', name);
-        localStorage.setItem('accessToken', accessToken);
-
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_BASE_URL}/kakao/callback`, {
+          params: { code },
+        });
         console.log('응답 데이터:', response.data);
         console.log('로그인 성공! 페이지 이동');
+        const { accessToken, id, name } = response.data.result;
+        setAuth({ accessToken, email, name });
+
         navigate('/shopinfo');
       } catch (error) {
         console.error(error);
