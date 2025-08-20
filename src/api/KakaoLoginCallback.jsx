@@ -5,7 +5,7 @@ import axios from 'axios';
 const KakaoLoginCallback = () => {
   const navigate = useNavigate();
   const code = new URLSearchParams(window.location.search).get('code');
-  const { VITE_BACKEND_BASE_URL } = import.meta.VITE_BACKEND_BASE_URL;
+  const VITE_BACKEND_BASE_URL = import.meta.VITE_BACKEND_BASE_URL;
 
   useEffect(() => {
     const fetchToken = async () => {
