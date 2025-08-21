@@ -81,11 +81,9 @@ const SetVideoStyle = () => {
   const handleCreateShorts = async () => {
     // 유효성 검사
     if (!snsType || !tone || !voice || !season || targets.length === 0 || styles.length === 0) {
-      alert('모든 스타일 옵션을 선택해주세요.');
       return;
     }
     if (imageIds.length === 0) {
-      alert('업로드된 이미지가 없어 숏폼을 생성할 수 없습니다.');
       return;
     }
 

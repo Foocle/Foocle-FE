@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import useAuthStore from '../stores/authStore';
-
+import useAuthStore from '../../stores/authStore';
 const KakaoLoginCallback = () => {
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
   const code = new URLSearchParams(window.location.search).get('code');
-
+  console.log(code);
   useEffect(() => {
     const fetchToken = async () => {
       try {
@@ -24,7 +23,7 @@ const KakaoLoginCallback = () => {
         const response = await axios.get(`${import.meta.env.VITE_BACKEND_BASE_URL}/kakao/callback`, {
           params: { code },
         });
-
+        console.log(code);
         // API 요청이 성공적으로 완료된 후에 인가코드를 저장합니다.
         localStorage.setItem('usedKakaoCode', code);
 

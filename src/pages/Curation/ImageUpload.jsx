@@ -107,7 +107,6 @@ const ImageUpload = () => {
         description: result.result.description, // description 추출
       }));
 
-      alert('모든 이미지가 성공적으로 업로드되었습니다.');
       navigate(`/setvideo/${storeId}`, { state: { uploadedData } });
     } catch (error) {
       console.error('이미지 업로드 중 오류 발생:', error);

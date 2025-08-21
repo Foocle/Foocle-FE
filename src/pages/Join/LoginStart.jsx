@@ -129,8 +129,8 @@ const LoginStart = () => {
 
   const KakaoLogin = () => {
     window.location.href = KAKAO_URL;
+    console.log(KAKAO_URL);
   };
-  console.log(KAKAO_URL);
 
   return (
     <StartWrapper>

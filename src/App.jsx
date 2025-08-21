@@ -13,8 +13,7 @@ import Login from './pages/Join/Login';
 import Signup from './pages/Join/Signup';
 import Mypage from './pages/Mypage';
 import StoreDetailPage from './pages/StoreDetailPage';
-import KakaoLoginCallback from './api/KakaoLoginCallback';
-
+import KakaoLoginCallback from './pages/Join/KakaoLoginCallback';
 function App() {
   return (
     <Routes>
