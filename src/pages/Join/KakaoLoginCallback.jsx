@@ -31,11 +31,11 @@ const KakaoLoginCallback = () => {
         console.log('로그인 성공! 페이지 이동');
 
         // 응답에서 email을 함께 추출합니다.
-        const { accessToken, id, email, name } = response.data.result;
+        const { accessToken, email, name } = response.data.result;
 
         // 추출한 email 변수를 사용하여 상태를 업데이트합니다.
-        setAuth({ accessToken, email, name });
-
+        setAuth({ token: accessToken, email, name });
+        console.log(accessToken, email, name);
         navigate('/shopinfo');
       } catch (error) {
         console.error('카카오 로그인 처리 중 오류 발생:', error);
